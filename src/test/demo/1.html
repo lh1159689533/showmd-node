@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html {
+            font-size: 14px;
+        }
+
+        pre {
+            padding: 10px;
+            border-radius: 3px;
+            background-color: rgb(252, 252, 252);
+            border: 1px solid rgb(225, 225, 232);
+        }
+
+        code.literal {
+            color: #e74c3c;
+            background: #fff;
+            white-space: nowrap;
+            border: 1px solid #e1e4e5;
+            overflow-x: auto;
+            padding: 2px 5px;
+        }
+
+        ul>li:nth-of-type(1) {
+            padding: 8px 0 4px 0;
+        }
+
+        ul>li {
+            padding: 4px 0; 
+        }
+
+        blockquote::before {
+            content: '';
+            border-left: 1px solid #000;
+        }
+    </style>
+</head>
+
+<body>
+    <select id="theme" style="position: fixed;right: 10px;top: 10px;"></select>
+    <h1 id="tab页签">tab页签</h1>
+    <p>tab的数据以数组存在state中, 通过 <code class='literal'>useAppState(&#39;globalTabs&#39;)</code> 获取。</p>
+    <h2 id="usetabtsx">useTab.tsx</h2>
+    <p>包含对页签的增删等操作</p>
+    <h3 id="引入">引入</h3>
+    <pre><code class="language-js"><span class="hljs-keyword">import</span> { useTab } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@src/components/TabBar/useTab.tsx&#x27;</span>;
+</code></pre>
+    <h3 id="主要api介绍">主要api介绍</h3>
+    <ol>
+        <li><code class='literal'>addTab(props)</code>
+            新增tab，同时新增对应的content<ul>
+                <li><code class='literal'>icon</code>: 页签前缀图标</li>
+                <li><code class='literal'>Component</code>: 页签关联内容区组件，根据 <code class='literal'>type</code> 获取, 具体配置见
+                    <code class='literal'>global.ts</code>。
+                </li>
+                <li><code class='literal'>title</code>: 页签名</li>
+                <li><code class='literal'>type</code>: 页签类型, 如: <code class='literal'>datadev/task/shell</code>、<code
+                        class='literal'>datadev/workflow </code>, 根据该值获取对应内容区组件, 具体配置见 <code
+                        class='literal'>global.ts</code>。</li>
+                <li><code class='literal'>path</code>: 页签关联内容区 <code class='literal'>path</code>, 格式: <code
+                        class='literal'>datadev/类型[/任务类型]/ ID</code> 如: <code
+                        class='literal'>datadev/task/shell/20220124123139749106</code>，<code
+                        class='literal'>datadev/workflow/20220123172834256144 </code>。**注意：任务比工作流多了一层<code
+                        class='literal'>[/任务类型]</code>**。该值和 <code class='literal'>globalContents</code> 的 <code
+                        class='literal'>key</code> 一一对应。</li>
+                <li><code class='literal'>params</code>: 页签关联内容区参数, 如工作流 <code
+                        class='literal'>{ workflowId: &#39;2a5f1056-7e82-11ec-a860-525400f55a20&#39; }</code> 任务 <code
+                        class='literal'>{ taskId: &#39;20220124123139749106&#39; }</code></li>
+                <li><code class='literal'>status</code>: 页签状态, <code class='literal'>normal</code> 默认、<code
+                        class='literal'>active</code> 选中</li>
+            </ul>
+        </li>
+    </ol>
+    <p><strong><code class='literal'>type</code> 与内容区的关联</strong></p>
+    <!--  引入Tabulator表格样式文件 -->
+    <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator_semanticui.min.css" rel="stylesheet">
+    <!-- 引入Tabulator表格依赖文件 -->
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+    <!--  Tabulator表格插槽 -->
+    <div id='table-1649851832096'></div><!--  初始化Tabulator表格 -->
+    <script
+        type="module">/*  引入Tabulator表格依赖文件 *//* import { Tabulator } from 'https://unpkg.com/tabulator-tables/dist/js/tabulator_esm.min.js'; */new Tabulator('#table-1649851832096', { data: [{ "id": 1, "业务类型": "workflow", "组件类型": "WorkFlow", "type值": "datadev/workflow", "原type值": "datadev/workflow", "原组件": "D3WorkFlow" }, { "id": 2, "业务类型": "shell", "组件类型": "TaskEditor", "type值": "datadev/task/shell", "原type值": "datadev/shell/editor", "原组件": "TaskEditor" }, { "id": 3, "业务类型": "hivesql", "组件类型": "TaskEditor", "type值": "datadev/task/hivesql", "原type值": "datadev/editor", "原组件": "TaskEditor" }, { "id": 4, "业务类型": "jdbcsql", "组件类型": "TaskEditor", "type值": "datadev/task/jdbcsql" }, { "id": 5, "业务类型": "spark", "组件类型": "Form", "type值": "datadev/task/spark", "原type值": "datadev/spark", "原组件": "Spark" }, { "id": 6, "业务类型": "sparksql", "组件类型": "TaskEditor", "type值": "datadev/task/sparksql", "原type值": "datadev/spark/editor", "原组件": "TaskEditor" }, { "id": 7, "业务类型": "python", "组件类型": "TaskEditor", "type值": "datadev/task/python" }, { "id": 8, "业务类型": "pythonspark", "组件类型": "TaskEditor", "type值": "datadev/task/pyspark" }, { "id": 9, "业务类型": "mapreduce", "组件类型": "Form", "type值": "datadev/task/mapreduce" }, { "id": 10, "业务类型": "跨工作流", "组件类型": "Stepper", "type值": "datadev/task/crossWorkflow" }, { "id": 11, "业务类型": "do-while", "组件类型": "DoWhile", "type值": "datadev/task/dowhile", "原type值": "datadev/dowhile", "原组件": "DoWhile" }, { "id": 12, "业务类型": "tablemanage", "type值": "datadev/tablemanage", "原type值": "datadev/tablemanage", "原组件": "TableManage" }, { "id": 13, "业务类型": "functionmanage", "type值": "datadev/functionmanage", "原type值": "datadev/functionmanage", "原组件": "FunctionManage" }, { "id": 14, "业务类型": "sourcemanage", "type值": "datadev/sourcemanage", "原type值": "datadev/sourcemanage", "原组件": "SourceManage" }], columns: [{ "title": "业务类型", "field": "业务类型", "hozAlign": "left", "headerHozAlign": "left", "tooltip": true }, { "title": "组件类型", "field": "组件类型", "hozAlign": "left", "headerHozAlign": "left", "tooltip": true }, { "title": "type值", "field": "type值", "hozAlign": "left", "headerHozAlign": "left", "tooltip": true }, { "title": "原type值", "field": "原type值", "hozAlign": "left", "headerHozAlign": "left", "tooltip": true }, { "title": "原组件", "field": "原组件", "hozAlign": "left", "headerHozAlign": "left", "tooltip": true }], height: '260px', layout: 'fitColumns', });</script>
+    <ol start="2">
+        <li><code class='literal'>deleteTabByPath(path)</code>
+            根据 <code class='literal'>path</code> 删除<code class='literal'> tab</code>, 如果 <code
+                class='literal'>path === null</code>, 则删除当前</li>
+    </ol>
+    <ul>
+        <li><code class='literal'>path</code>: 要删除的<code class='literal'>tab path</code>, 同 <code
+                class='literal'>addTab</code></li>
+    </ul>
+    <h1 id="内容区">内容区</h1>
+    <p>内容区数据以Map存在state中, 通过 <code class='literal'>useAppState(&#39;globalContents&#39;)</code> 获取。</p>
+    <h2 id="usecontenttsx">useContent.tsx</h2>
+    <h1 id="编辑器组件">编辑器组件</h1>
+    <h2 id="引入-1">引入</h2>
+    <pre><code><span class="hljs-keyword">import</span> <span class="hljs-title class_">MonacoEditor</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@src/components/MonacoEditor&#x27;</span>;
+</code></pre>
+    <h2 id="使用">使用</h2>
+    <pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">MonacoEditor</span>
+    <span class="hljs-attr">ref</span>=<span class="hljs-string">{editorWrapRef}</span>
+    <span class="hljs-attr">value</span>=<span class="hljs-string">{initContent}</span>
+    <span class="hljs-attr">language</span>=<span class="hljs-string">{language}</span>
+    <span class="hljs-attr">onChange</span>=<span class="hljs-string">{handleEditorChange}</span>
+    <span class="hljs-attr">onSelection</span>=<span class="hljs-string">{handleSelection}</span>
+    <span class="hljs-attr">onCmdS</span>=<span class="hljs-string">{()</span> =&gt;</span> setCmdS(true)}
+/&gt;
+</code></pre>
+    <h2 id="参数">参数</h2>
+    <pre><code class="language-js"><span class="hljs-attr">value</span>: string;
+<span class="hljs-attr">language</span>:string;
+<span class="hljs-attr">onChange</span>:<span class="hljs-title class_">Function</span>;
+<span class="hljs-attr">onSelection</span>:<span class="hljs-title class_">Function</span>;
+<span class="hljs-attr">onCmdS</span>:<span class="hljs-title class_">Function</span>;
+</code></pre>
+    <ol>
+        <li><code class='literal'>value</code>：内容</li>
+        <li><code class='literal'>language</code>：语言，<code class='literal'>sql</code> 、<code
+                class='literal'>shell</code> 等</li>
+        <li><code class='literal'>onChange</code>：内容发生改变回调，<code
+                class='literal'>(value: string, isModify: boolean) =&gt; void</code>
+            <ul>
+                <li><code class='literal'>value</code>：最新内容</li>
+                <li><code class='literal'>isModify</code>：与初始值对比判断内容是否变化</li>
+            </ul>
+        </li>
+        <li><code class='literal'>onSelection</code>：选择的内容发生变化回调，<code class='literal'>(value: string) =&gt; void</code>
+            <ul>
+                <li><code class='literal'>value</code>：选择的内容</li>
+            </ul>
+        </li>
+        <li><code class='literal'>onCmdS</code>：<code class='literal'>Command + S</code> 快捷保存回调，只触发操作，具体业务自行处理</li>
+    </ol>
+    <h1 id="cos">COS</h1>
+    <h2 id="引入-2">引入</h2>
+    <pre><code><span class="hljs-keyword">import</span> <span class="hljs-title class_">Cos</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@src/utils/Cos&#x27;</span>;
+</code></pre>
+    <h2 id="使用-1">使用</h2>
+    <pre><code><span class="hljs-keyword">new</span> <span class="hljs-title class_">Cos</span>({ token, region, bucket });
+</code></pre>
+    <h2 id="参数-1">参数</h2>
+    <pre><code class="language-js">interface <span class="hljs-title class_">IToken</span> {
+  <span class="hljs-attr">token</span>: string;       <span class="hljs-comment">// 密钥的sessionToken</span>
+  <span class="hljs-attr">secretId</span>: string;    <span class="hljs-comment">// 密钥的tmpSecretId</span>
+  <span class="hljs-attr">secretKey</span>: string;   <span class="hljs-comment">// 密钥的tmpSecretKey</span>
+  <span class="hljs-attr">createTime</span>: number;  <span class="hljs-comment">// 密钥获取的开始时间，即获取时刻的时间戳，单位秒</span>
+  <span class="hljs-attr">expiredTime</span>: number; <span class="hljs-comment">// 超时时刻的时间戳，单位秒</span>
+}
+
+interface <span class="hljs-title class_">ICosProps</span> {
+  <span class="hljs-attr">region</span>: string; <span class="hljs-comment">// 存储桶所属地域</span>
+  <span class="hljs-attr">bucket</span>: string; <span class="hljs-comment">// 存储桶</span>
+  <span class="hljs-attr">token</span>: <span class="hljs-title class_">IToken</span>;  <span class="hljs-comment">// 密钥</span>
+}
+</code></pre>
+    <h2 id="api">API</h2>
+    <h3 id="uploadcontent">uploadContent</h3>
+    <p>文件内容上传，如果文件不存在，则新建。</p>
+    <p><code class='literal'>(path: string, content: string) =&gt; Promise</code></p>
+    <ol>
+        <li><code class='literal'>path</code>：文件路径，<code class='literal'>/datastudio/personal/hui/a.sh</code></li>
+        <li><code class='literal'>content</code>：文件内容</li>
+    </ol>
+    <p>上传完成后，返回：<code class='literal'>[err, data]</code></p>
+    <ol>
+        <li><code class='literal'>err</code>：错误信息，如果为 <code class='literal'>null</code> 则表示上传成功</li>
+        <li><code class='literal'>data</code>：上传成功后返回文件访问地址 <code class='literal'>data.Location</code></li>
+    </ol>
+    <pre><code><span class="hljs-keyword">const</span> [err, data]: any = <span class="hljs-keyword">await</span>  <span class="hljs-title function_">uploadContent</span>(<span class="hljs-string">&#x27;/datastudio/personal/hui/a.sh&#x27;</span>, <span class="hljs-string">&#x27;echo &quot;test&quot;&#x27;</span>);
+    <span class="hljs-keyword">if</span> (!err) {
+    <span class="hljs-keyword">return</span> data?.<span class="hljs-property">Location</span>;
+}
+</code></pre>
+    <h3 id="getfilecontent">getFileContent</h3>
+    <p>获取文件内容</p>
+    <p><code class='literal'>(path: string, onProgress?: Function) =&gt; Promise&lt;[err, content]&gt;</code></p>
+    <ol>
+        <li><code class='literal'>path</code>：文件路径，<code class='literal'>/datastudio/personal/hui/a.sh</code></li>
+        <li><code class='literal'>onProgress</code>：进度回调，非必需。<code
+                class='literal'>() =&gt; (loaded, total, speed, percent)</code>
+            <ol>
+                <li><code class='literal'>loaded</code>：已经下载的对象部分大小，以字节（Bytes）为单位</li>
+                <li><code class='literal'>total</code>：整个对象的大小，以字节（Bytes）为单位</li>
+                <li><code class='literal'>speed</code>：对象的下载速度，以字节/秒（Bytes/s）为单位</li>
+                <li><code class='literal'>percent</code>：对象下载的百分比，以小数形式呈现</li>
+            </ol>
+        </li>
+    </ol>
+    <p>成功后，返回：<code class='literal'>[err, content]</code></p>
+    <ol>
+        <li><code class='literal'>err</code>：错误信息，如果为 <code class='literal'>null</code> 则表示上传成功</li>
+        <li><code class='literal'>content</code>：文件内容</li>
+    </ol>
+    <h1 id="usecos">useCos</h1>
+    <p><code class='literal'>cos</code> 工具函数</p>
+    <h2 id="引入-3">引入</h2>
+    <pre><code><span class="hljs-keyword">import</span> useCos <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@src/utils/useCos&#x27;</span>;
+</code></pre>
+    <h2 id="使用-2">使用</h2>
+    <pre><code><span class="hljs-keyword">const</span> { getCos, getCosPromise, getToken } = <span class="hljs-title function_">useCos</span>();
+</code></pre>
+    <h2 id="api-1">API</h2>
+    <h3 id="gettoken">getToken</h3>
+    <p>调用接口 <code class='literal'>/api/v1/script/GetCosToken</code> 获取密钥信息。</p>
+    <p><code class='literal'>(bucket: string) =&gt; Promise&lt;{token, region}&gt;</code></p>
+    <ol>
+        <li><code class='literal'>bucket</code>：存储桶名称</li>
+        <li>返回：<ol>
+                <li><code class='literal'>token</code>：包含 <code class='literal'>secretId</code> 、 <code
+                        class='literal'>secretKey</code> 等信息</li>
+                <li><code class='literal'>region</code>：存储桶所属地域</li>
+            </ol>
+        </li>
+    </ol>
+    <h3 id="getcos">getCos</h3>
+    <p>获取 <code class='literal'>Cos</code> 实例。</p>
+    <p><code class='literal'>(token, region, bucket) =&gt; CosInstance</code></p>
+    <ol>
+        <li><code class='literal'>token</code>：包含 <code class='literal'>secretId</code> 、 <code
+                class='literal'>secretKey</code> 等信息</li>
+        <li><code class='literal'>region</code>：存储桶所属地域 </li>
+        <li><code class='literal'>bucket</code>：存储桶名称 </li>
+        <li>返回：存储桶实例</li>
+    </ol>
+    <h3 id="getcospromise">getCosPromise</h3>
+    <p>获取 <code class='literal'>Cos</code> 实例。</p>
+    <p><code class='literal'>(bucket) =&gt; Promise&lt;CosInstance&gt;</code></p>
+    <ol>
+        <li><code class='literal'>bucket</code>：存储桶名称 </li>
+        <li>返回：<code class='literal'>Promise</code>，异步返回 <code class='literal'>Cos</code> 实例</li>
+    </ol>
+    <blockquote>
+        <p><code class='literal'>getCos</code> 与 <code class='literal'>getCosPromise</code> 区别：</p>
+        <ol>
+            <li><code class='literal'>getCos</code>获取 <code class='literal'>Cos</code> 实例时，需要先调用 <code
+                    class='literal'>getToken</code> 获取密钥等信息；<code class='literal'>getCosPromise</code> 无需调用 <code
+                    class='literal'>getToken</code>，<code class='literal'>getCosPromise</code> 其实就是 <code
+                    class='literal'>getToken</code> + <code class='literal'>getCos</code></li>
+            <li><code class='literal'>getCos</code> 是一个同步函数，<code class='literal'>getCosPromise</code> 是一个异步函数</li>
+        </ol>
+    </blockquote>
+    <p><strong>注意：由于 <code class='literal'>useCos</code> 内部使用了 <code class='literal'>useServiceCall</code>
+            ，因此以下场景无法使用：</strong>
+        <strong>1. <code class='literal'>class components</code> 中</strong>
+        <strong>2. <code class='literal'>event handlers</code> 中</strong>
+        <strong>3. <code class='literal'>useMemo</code>, <code class='literal'>useReducer</code>, or <code
+                class='literal'>useEffect</code> 中</strong>
+    </p>
+    <pre><code><span class="hljs-keyword">const</span> cosInstance = <span class="hljs-keyword">await</span> <span class="hljs-title function_">getCosPromise</span>(<span class="hljs-string">&#x27;cos-hhhuilli-1257305158&#x27;</span>);
+</code></pre>
+    <pre><code><span class="hljs-keyword">const</span> { token, region } = <span class="hljs-keyword">await</span> <span class="hljs-title function_">getToken</span>(<span class="hljs-string">&#x27;cos-hhhuilli-1257305158&#x27;</span>);
+<span class="hljs-keyword">const</span> cosInstance = <span class="hljs-title function_">getCos</span>(token, region, <span class="hljs-string">&#x27;cos-hhhuilli-1257305158&#x27;</span>);
+</code></pre>
+    <h1 id="日志组件">日志组件</h1>
+    <h2 id="引入-4">引入</h2>
+    <pre><code><span class="hljs-keyword">import</span> <span class="hljs-title class_">RunLog</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@src/components/RunLog&#x27;</span>;
+</code></pre>
+    <h2 id="使用-3">使用</h2>
+    <pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">RunLog</span>
+    <span class="hljs-attr">onChangeSize</span>=<span class="hljs-string">{handleSize}</span>
+    <span class="hljs-attr">height</span>=<span class="hljs-string">{runLogHeight}</span>
+    <span class="hljs-attr">active</span>=<span class="hljs-string">{</span>`${<span class="hljs-attr">active</span>}`}
+    <span class="hljs-attr">logs</span>=<span class="hljs-string">{logs}</span>
+/&gt;</span>
+</code></pre>
+    <h2 id="参数-2">参数</h2>
+    <pre><code class="language-js">interface <span class="hljs-title class_">TabData</span> {
+  id?: string | number; <span class="hljs-comment">// id</span>
+  <span class="hljs-attr">label</span>: string;        <span class="hljs-comment">// title</span>
+  <span class="hljs-attr">data</span>: string;         <span class="hljs-comment">// 内容</span>
+}
+
+interface <span class="hljs-title class_">IRunLogProps</span> {
+  onChangeSize?: <span class="hljs-title class_">Function</span>;
+  list?: <span class="hljs-title class_">Array</span>&lt;<span class="hljs-title class_">TabData</span>&gt;;
+  height?: number;
+  <span class="hljs-attr">active</span>: string; 
+  logs?: any; 
+}
+</code></pre>
+    <ol>
+        <li><code class='literal'>onChangeSize </code>：大小变化回调, <code class='literal'>size</code> 分为: <code
+                class='literal'>min</code> (最小化)、 <code class='literal'>half</code> (半屏)、 <code
+                class='literal'>full</code> (最大化), 该回调只传入类型, 具体高度值需自行计算布局</li>
+        <li><code class='literal'>list </code>：当该值不为空, 则以 <code class='literal'>list</code> 渲染 <code
+                class='literal'>tab</code>, <code class='literal'>list</code> 与 <code class='literal'>logs</code>
+            必须有一个有值, <code class='literal'>list</code> 优先级高于 <code class='literal'>logs</code>
+            <ol>
+                <li><code class='literal'>id</code>：<code class='literal'>tab</code> 唯一标识</li>
+                <li><code class='literal'>label</code>：标题</li>
+                <li><code class='literal'>data</code>：内容</li>
+            </ol>
+        </li>
+        <li><code class='literal'>height </code>：显示高度, 可通过 <code class='literal'>onChangeSize</code> 改变</li>
+        <li><code class='literal'>active </code>：指定当前激活的 <code class='literal'>tab</code></li>
+        <li><code class='literal'>logs </code>： <code class='literal'>logs</code> 有值, <code class='literal'>list</code>
+            为空时, <code class='literal'>tab</code> 显示为: <code
+                class='literal'>[{ id: &#39;0&#39;, label: &#39;运行日志&#39;, data: logs }]</code></li>
+    </ol>
+
+
+
+
+    <script type="module">
+        import { theme } from './theme.js';
+
+        function loadTheme() {
+            const themeEle = document.querySelector('#theme');
+            themeEle.addEventListener('change', (e) => {
+                loadCSS(e.target.value);
+            });
+            theme.map(t => {
+                const option = document.createElement('option');
+                option.setAttribute('value', t.file);
+                option.textContent = t.name;
+                themeEle.appendChild(option);
+            });
+        }
+
+        function loadCSS(theme) {
+            const head = document.getElementsByTagName('HEAD')[0];
+            const style = document.createElement('link');
+            style.href = `../../node_modules/highlight.js/styles/${theme}`;
+            style.rel = 'stylesheet';
+            style.type = 'text/css';
+            head.appendChild(style);
+        }
+
+        loadTheme();
+    </script>
+</body>
+
+</html>

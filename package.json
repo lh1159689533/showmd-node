@@ -1,0 +1,33 @@
+{
+  "name": "myshowmd",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "pm2 start ./src/main.js --watch --name='myShowmd' & pm2 logs",
+    "stop": "pm2 stop myShowmd",
+    "logs": "pm2 logs",
+    "build": "node ./build/index.js"
+  },
+  "keywords": ["myShowmd", "JavaScript", "markdown"],
+  "author": "liuh",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/parser": "^7.17.9",
+    "@types/node": "^17.0.25",
+    "chalk": "^4.1.1",
+    "express": "~4.16.1",
+    "highlight.js": "^11.5.1",
+    "marked": "^4.0.14",
+    "morgan": "~1.9.1",
+    "ora": "^5.4.1",
+    "sqlite3": "^5.0.2",
+    "tabulator-tables": "^5.1.0",
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.0"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.1",
+    "multiparty": "^4.2.3"
+  }
+}

@@ -2,21 +2,21 @@ const path = require('path');
 const express = require('express');
 // const cors = require('cors');
 const router = require("./routes");
+const bodyParser = require('body-parser')
 
 const app = express();
 
 // app.use(cors());
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-// app.use(function (req, res, next) {
-//   res.set("Content-Type", "text/html;charset=utf-8");
-//   next();
-// });
+app.use(express.static(path.resolve("public")));
+app.use(bodyParser.json({ limit: '20mb' }));
+app.use(bodyParser.urlencoded({ extended: false, limit: '20mb' }));
+app.use(function (req, res, next) {
+  res.set("Content-Type", "application/json;charset=utf-8");
+  next();
+});
 
 app.use('/', router);
-
-app.use(express.static(path.resolve("public")));
 
 // error handler
 app.use(function (err, req, res, next) {

@@ -1,11 +1,10 @@
 const { marked, options } = require('marked');
 const fs = require('fs');
 const path = require('path');
-const { image, ...renderer } = require('./renderer');
-const logger = require('../logger');
+const renderer = require('./renderer');
 
 class Marked {
-  constructor({ downImage = false, ...options }) {
+  constructor(options = {}) {
     marked.setOptions({
       highlight: function (code, lang) {
         const hljs = require('highlight.js');
@@ -17,19 +16,15 @@ class Marked {
       ...options,
     });
 
-    const _renderer = { ...renderer };
-    if (downImage) {
-      _renderer.image = image;
-    }
-
-    marked.use({ renderer: _renderer });
+    marked.use({ renderer });
   }
 
-  async parse(content) {
+  parse(content) {
     const code = marked.parse(content);
-    const tmpl = await fs.readFileSync(path.resolve('/public/template.html'));
-    const html = tmpl.toString().split(/\n/).map(item => item.trim()).join('')
-                     .replace('<body></body>', `<body><div class='markdown-body'>${code}</div></body>`);
+    // const tmpl = fs.readFileSync(path.resolve('public/template.html'));
+    // const html = tmpl.toString().split(/\n/).map(item => item.trim()).join('')
+    //                  .replace('<body></body>', `<body><div class="markdown-body">${code}</div></body>`);
+    const html = `<div class="markdown-body">${code}</div>`;
     return html;
   }
 

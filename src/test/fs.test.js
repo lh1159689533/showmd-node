@@ -31,13 +31,21 @@ async function read(dir) {
 
 // console.log(path.join(__dirname, 'temp'));
 // console.log(path.join('temp'));
-// console.log(path.resolve('temp'));
+// console.log(path.resolve('temp', 'dd'));
 // console.log(__dirname);
 // console.log(__filename);
 
-async function mkdir() {
-  const result = await fs.mkdirSync(path.resolve('src/temp1'), { recursive: true });
-  console.log(result);
+function mkdir(...args) {
+  console.log(args);
+  console.log(path.resolve(...args));
+  // const result = fs.mkdirSync(path.resolve(), { recursive: true });
+  // console.log(result);
 }
 
-mkdir()
+// mkdir('temp1', 'temp2')
+
+function write() {
+  fs.writeFile(path.resolve('temp/2.md'), '111222', () => {});
+}
+
+write();

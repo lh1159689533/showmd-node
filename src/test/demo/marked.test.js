@@ -9,10 +9,7 @@ const renderer = {
   },
   table(header, body) {
     const ast = parse(`<>${header.replace(/\n/g, '')}${body.replace(/\n/g, '')}</>`, {
-      plugins: [
-        "jsx",
-        "typescript",
-      ],
+      plugins: ['jsx', 'typescript'],
     });
 
     // 表格的所有数据，包括header、body，存入一个二维数组，第一列为header数据，其他列为body数据
@@ -21,12 +18,14 @@ const renderer = {
     const { children } = ast?.program?.body?.[0]?.expression ?? {}; // children为tr节点集合
     if (children?.length) {
       let index = 0;
-      children.map(item => {
+      children.map((item) => {
         data[index] = [];
-        item?.children.map(citem => { // item.children为td、th节点集合
+        item?.children.map((citem) => {
+          // item.children为td、th节点集合
           data[index].push(citem?.children?.[0]?.value); // citem.children为文本节点集合，一般只有一个
           const attr0 = citem?.openingElement?.attributes?.[0]; // td、th的属性
-          if (attr0?.name?.name === 'align') { // 目前只支持align属性
+          if (attr0?.name?.name === 'align') {
+            // 目前只支持align属性
             align.push(attr0?.value?.value);
           } else {
             align.push('left');
@@ -40,13 +39,15 @@ const renderer = {
     const table_columns = [];
     const [columns, ...tdata] = data;
     if (columns?.length) {
-      table_columns.push(...columns.map((col, i) => ({
-        title: col,
-        field: col,
-        hozAlign: align[i],
-        headerHozAlign: align[i],
-        tooltip: true
-      })));
+      table_columns.push(
+        ...columns.map((col, i) => ({
+          title: col,
+          field: col,
+          hozAlign: align[i],
+          headerHozAlign: align[i],
+          tooltip: true,
+        }))
+      );
 
       for (let i = 0, len1 = tdata.length; i < len1; i++) {
         let row_data = { id: i + 1 };
@@ -59,7 +60,7 @@ const renderer = {
 
     const tableId = `table-${new Date().valueOf()}`;
 
-    return (`
+    return `
       <!--  引入Tabulator表格样式文件 -->
       <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator_semanticui.min.css" rel="stylesheet">
       <!-- 引入Tabulator表格依赖文件 -->
@@ -77,27 +78,30 @@ const renderer = {
           layout: 'fitColumns',
         });
       </script>
-    `.split(/\n/).map(item => item.trim()).join('')); // 去掉换行及无意义的空格
+    `
+      .split(/\n/)
+      .map((item) => item.trim())
+      .join(''); // 去掉换行及无意义的空格
   },
   blockquote(quote) {
     if (/注意(：|:\s*)/g.test(quote)) {
-      return (`
+      return `
         <blockquote class='notice'>
           <div style='display:flex'>
             <i></i><span class='tips'>注意：</span>
           </div>
           ${quote.replace(/注意(：|:\s*)/g, '')}
         </blockquote>
-      `);
+      `;
     } else if (/说明(：|:\s*)/g.test(quote)) {
-      return (`
+      return `
         <blockquote class='explain'>
           <div style='display:flex'>
             <i></i><span class='tips'>说明：</span>
           </div>
           ${quote.replace(/说明(：|:\s*)/g, '')}
         </blockquote>
-      `);
+      `;
     } else {
       return `<blockquote>${quote}</blockquote>`;
     }
@@ -105,13 +109,13 @@ const renderer = {
   image(href, title, text) {
     console.log(href, title, text);
     return `<img src="${encodeURIComponent(href)}" alt="${text}" title="${title}">`;
-  }
+  },
 };
 
 const tokenizer = {
   code(code) {
     console.log(code);
-  }
+  },
 };
 
 async function test() {
@@ -230,10 +234,24 @@ async function test() {
           }
         </style>
       </head>
-      <body style='margin:0'>`.split(/\n/).map(item => item.trim()).join('').concat(`<div class='markdown-body'>${code}</div>`).concat('</body></html>');
+      <body style='margin:0'>`
+    .split(/\n/)
+    .map((item) => item.trim())
+    .join('')
+    .concat(`<div class='markdown-body'>${code}</div>`)
+    .concat('</body></html>');
 
   fs.writeFileSync(path.resolve('./src/demo/2.html'), html, 'utf8');
 }
 
-test();
+function lexer() {
+  const md = fs.readFileSync(path.resolve('./src/test/demo/1.md'));
+  // const md = '```js 111```';
+  const tokens = marked.lexer(md.toString());
+  console.dir(tokens);
+  fs.writeFileSync(path.resolve('./src/test/demo/1.json'), JSON.stringify(tokens));
+}
+
+// test();
 // loadTheme();
+lexer();

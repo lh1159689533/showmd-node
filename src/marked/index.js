@@ -1,6 +1,4 @@
-const { marked, options } = require('marked');
-const fs = require('fs');
-const path = require('path');
+const { marked } = require('marked');
 const renderer = require('./renderer');
 
 class Marked {

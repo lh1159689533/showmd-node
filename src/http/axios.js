@@ -1,12 +1,5 @@
 const axios = require('axios');
 
-let PREFIX = "/api",
-  IP = "";
-if (process.env.NODE_ENV === "development") {
-  PREFIX = "/api";
-  IP = "http://localhost:8080";
-}
-
 // 创建axios实例
 const instance = axios.create({
   timeout: 50000,
@@ -15,11 +8,7 @@ const instance = axios.create({
 // request拦截器
 instance.interceptors.request.use(
   (config) => {
-    config.url = config.url;
-    
-    if (config.url.endsWith(".json")) {
-      config.url = IP + config.url.replace("/api", "");
-    } else if (config.url.endsWith("picture/upload")) {
+    if (config.url.endsWith("picture/upload")) {
       config.headers["Content-Type"] = "multipart/form-data";
     } else {
       config.headers["Content-Type"] = "application/json;charset=UTF-8";

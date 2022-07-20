@@ -1,0 +1,9 @@
+src/test/
+src/public
+build/*.js
+dist/
+i18n/
+mock/*.js
+node_modules
+**/*.json
+**/*.less

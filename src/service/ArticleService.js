@@ -34,7 +34,7 @@ class ArticleService {
     const articleDao = new ArticleDao();
     const res = new Response();
     const article = await articleDao.findById(id);
-    if (articlerr) {
+    if (article) {
       return res.success(article).toString();
     } else {
       logger.error('查询文章出错:', id);

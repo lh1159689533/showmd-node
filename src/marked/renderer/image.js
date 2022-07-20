@@ -1,5 +1,3 @@
-const fs = require('fs');
-const path = require('path');
 const dayjs = require('dayjs');
 
 module.exports = function image(href, title, text) {

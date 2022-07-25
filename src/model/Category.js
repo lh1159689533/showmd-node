@@ -1,16 +1,22 @@
-const { Model, DataTypes } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const sequelize = require('../db/sequelize');
 
 // 分类
-class Category extends Model {}
-
-Category.init({
-  value: {
-    type: DataTypes.STRING,
-    primaryKey: true,
-    autoIncrement: false,
+const Category = sequelize.define(
+  'category',
+  {
+    value: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+      autoIncrement: false,
+    },
+    label: DataTypes.STRING,
   },
-  label: DataTypes.STRING
-}, { sequelize, tableName: 'category', timestamps: false });
+  {
+    tableName: 'category',
+    timestamps: false,
+    underscored: true,
+  }
+);
 
 module.exports = Category;

@@ -1,47 +1,57 @@
-const { Model, DataTypes } = require('sequelize');
+const { DataTypes, NOW } = require('sequelize');
 const sequelize = require('../db/sequelize');
 const User = require('./User');
-const Category = require('./Category');
+const Cover = require('./Cover');
+const dayjs = require('dayjs');
 
 // 文章
-class Article extends Model {}
-
-Article.init({
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
+const Article = sequelize.define(
+  'article',
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    name: DataTypes.STRING,
+    content: DataTypes.TEXT,
+    tags: DataTypes.STRING,
+    category: DataTypes.STRING,
+    summary: DataTypes.STRING,
+    userId: {
+      // 关联用户
+      type: DataTypes.INTEGER,
+      references: {
+        model: User,
+        key: 'id',
+      },
+    },
+    createTime: {
+      type: DataTypes.DATE,
+      defaultValue: NOW,
+      get() {
+        return dayjs(this.getDataValue('createTime')).format('YYYY-MM-DD HH:mm:ss');
+      },
+    },
+    updateTime: {
+      type: DataTypes.DATE,
+      defaultValue: NOW,
+      get() {
+        return dayjs(this.getDataValue('updateTime')).format('YYYY-MM-DD HH:mm:ss');
+      },
+    },
   },
-  name: DataTypes.STRING,
-  content: DataTypes.TEXT,
-  tags: DataTypes.STRING,
-  summary: DataTypes.STRING,
-  cover: DataTypes.TEXT,
-  creator: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: User,
-      key: 'id'
-    }
-  },
-  category: {
-    type: DataTypes.STRING,
-    references: {
-      model: Category,
-      key: 'value'
-    }
-  },
-}, {
-  sequelize,
-  tableName: 'article'
-});
+  {
+    tableName: 'article',
+    timestamps: false,
+    underscored: true,
+  }
+);
 
 // 用户与文章为一对多关系，关联外键creator
 User.hasMany(Article);
 Article.belongsTo(User);
 
-// 文章必须属于一个类别，同一类别可能有多篇文章
-Category.hasMany(Article);
-Article.belongsTo(Category);
+Article.hasOne(Cover);
 
 module.exports = Article;

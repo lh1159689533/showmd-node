@@ -1,16 +1,22 @@
-const { Model, DataTypes } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const sequelize = require('../db/sequelize');
 
 // 标签
-class Tag extends Model {}
-
-Tag.init({
-  value: {
-    type: DataTypes.STRING,
-    primaryKey: true,
-    autoIncrement: false,
+const Tag = sequelize.define(
+  'tag',
+  {
+    value: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+      autoIncrement: false,
+    },
+    label: DataTypes.STRING,
   },
-  label: DataTypes.STRING
-}, { sequelize, tableName: 'tag', timestamps: false });
+  {
+    tableName: 'tag',
+    timestamps: false,
+    underscored: true,
+  }
+);
 
 module.exports = Tag;

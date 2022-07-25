@@ -1,0 +1,510 @@
+@charset "UTF-8";
+
+.showmd {
+  word-break: break-word;
+  font-weight: 400;
+  line-height: 2;
+  font-size: 0.95em;
+  overflow-x: hidden;
+  color: black;
+  color: #36ace1;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+  background-image: linear-gradient(90deg, rgba(217, 234, 251, .25) 3%, transparent 0), linear-gradient(1turn, rgba(217, 234, 251, .25) 3%, transparent 0);
+  background-size: 20px 20px;
+  background-position: 50%;
+
+  /* th td 边框色 */
+  --table-thd-border-color: #f9f1db;
+  /* 偶数tr背景色 */
+  --table-tr-2n-bg-color: #fcfcfc;
+  /* tr选中背景色 */
+  --table-tr-hover-bg-color: #fff9f9;
+  /* thead背景色 */
+  --table-thead-bg-color: #fff9f9;
+
+  /* 任务列表边框色 */
+  --input-checkbox-border-color: #f07c82;
+  /* 任务列表文本色，可作用于icon图标 */
+  --input-checkbox-text-color: #f33b1f;
+
+  /* ul、ol列表序号色 */
+  --marker-text-color: #f33b1f;
+
+  /* 块引用文本色 */
+  --blockquote-text-color: #3d3d3d;
+  /* 块引用背景色 */
+  --blockquote-bg-color: #fff9f9;
+  /* 块引用边框色 */
+  --blockquote-border-color: #f07c82;
+  /* 块引用::before::after伪元素文本色 */
+  --blockquote-before-text-color: #f07c82;
+  /* 块引用.notice伪元素文本色 */
+  --blockquote-notice-before-text-color: #ff962f;
+  /* 块引用.notice代码背景色 */
+  --blockquote-notice-spancode-bg-color: #ffe8d5;
+  /* 块引用.notice背景色 */
+  --blockquote-notice-bg-color: #ffe8d5;
+  /* 块引用.notice边框色 */
+  --blockquote-notice-border-color: #ff962f;
+  /* 块引用.notice文本色 */
+  --blockquote-notice-text-color: #a02800;
+  /* 块引用.notice加粗文本色 */
+  --blockquote-notice-strong-text-color: #a02800;
+
+  /* 链接文本色 */
+  --link-text-color: #ff962f;
+  /* 链接边框色 */
+  --link-border-color: #ff962f;
+  /* 链接选中文本色 */
+  --link-active-text-color: #ee2746;
+  /* 链接选中边框色 */
+  --link-active-border-color: #ee2746;
+
+  /* 代码块阴影色 */
+  --pre-shadow-color: hsl(0deg 0% 43% / 45%);
+  /* 代码块背景色 */
+  --code-bg-color: #fff9f9;
+  /* 代码块文本色 */
+  --code-text-color: #333333;
+  /* 代码块复制按钮边框色 */
+  --code-copy-border-left-color: #f07c82;
+  /* 代码块复制按钮文本色 */
+  --code-copy-text-color: #f07c82;
+  /* 代码块复制按钮背景色 */
+  --code-copy-bg-color: #f07c82;
+  /* 代码文本色 */
+  --spancode-text-color: #ee2746;
+  /* 代码背景色 */
+  --spancode-bg-color: #fff9f9;
+
+  /* 标题文本色 */
+  --h1_6-text-color: #f33b1f;
+  /* 标题边框色 */
+  --h1_6-border-color: #36ace1;
+
+  /* 强调文本色 */
+  --strong-text-color: #ee3f4d;
+  /* 斜体文本色 */
+  --em-text-color: #f33b1f;
+  /* 删除线文本色 */
+  --del-text-color: #f33b1f;
+}
+
+.showmd strong {
+  padding: 1px;
+  color: var(--strong-text-color);
+}
+
+.showmd em {
+  padding: 0 2px;
+  color: var(--em-text-color);
+}
+
+.showmd h1,
+.showmd h2,
+.showmd h3,
+.showmd h4,
+.showmd h5,
+.showmd h6 {
+  color: var(--h1_6-text-color);
+  position: relative;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+  font-weight: bold;
+}
+
+.showmd h1 {
+  position: relative;
+  padding: 12px 38px;
+  margin: 30px 0;
+  border-bottom: 1px solid var(--h1_6-border-color) !important;
+}
+
+.showmd h2 {
+  border-bottom: 1px solid var(--h1_6-border-color) !important;
+  position: relative;
+  padding: 12px 36px;
+  margin: 28px 0;
+}
+
+.showmd h3 {
+  position: relative;
+  padding: 4px 32px;
+  margin: 26px 0;
+}
+
+.showmd h3:before {
+  width: 24px;
+  height: 24px;
+  background-size: 24px 24px;
+}
+
+.showmd h4 {
+  position: relative;
+  padding: 4px 28px;
+  margin: 22px 0;
+}
+
+.showmd h4:before {
+  width: 20px;
+  height: 20px;
+  background-size: 20px 20px;
+}
+
+.showmd h5 {
+  position: relative;
+  padding: 4px 26px;
+  margin: 20px 0;
+}
+
+.showmd h5:before {
+  width: 18px;
+  height: 18px;
+  background-size: 18px 18px;
+}
+
+.showmd h6 {
+  position: relative;
+  padding: 4px 22px;
+  margin: 16px 0;
+}
+
+.showmd h6:before {
+  width: 16px;
+  height: 16px;
+  background-size: 16px 16px;
+}
+
+.showmd img {
+  max-width: 100%;
+}
+
+.showmd ol {
+  display: block;
+  list-style-type: decimal !important;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 40px;
+}
+
+.showmd code {
+  font-family: -apple-system, -apple-system-body, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, PingFang SC, "思源黑体 CN", "思源黑体", "JetBrains Mono", "Fira Code", Menlo, "Ubuntu Mono", Consolas, sans-serif;
+  word-break: break-word;
+  overflow-x: auto;
+  background-color: var(--spancode-bg-color) !important;
+  color: var(--spancode-text-color);
+  border-radius: 2px;
+  font-size: 16px;
+  padding: 1px 2px;
+}
+
+.showmd pre {
+  font-family: Menlo, Monaco, Consolas, Courier New, monospace;
+  overflow: auto;
+  position: relative;
+  line-height: 1.75;
+  box-shadow: 0 0 8px var(--pre-shadow-color);
+  border-radius: 4px;
+  margin: 16px;
+}
+
+.showmd pre:before {
+  content: "";
+  display: block;
+  height: 30px;
+  width: 100%;
+  margin-bottom: -7px;
+  background: url(data:image/png;base64,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) 10px 10px no-repeat;
+  background-size: 40px;
+}
+
+.showmd pre>code {
+  margin: 12px 0 0 0 !important;
+  border-radius: 3px;
+  font-size: 0.87em;
+  padding: 16px 12px;
+  word-break: normal;
+  display: block;
+  overflow-x: auto;
+  color: var(--code-text-color);
+  background-color: var(--code-bg-color) !important;
+}
+
+.showmd a {
+  color: var(--link-text-color);
+  border-bottom: 1px solid var(--link-border-color);
+  font-weight: 400;
+  text-decoration: none;
+  margin: 0 4px;
+  font-size: 14px;
+}
+
+.showmd a:hover,
+.showmd a:active {
+  border-bottom: 2px solid var(--link-active-border-color);
+  color: var(--link-active-text-color);
+}
+
+.showmd blockquote {
+  color: var(--blockquote-text-color) !important;
+  background-color: var(--blockquote-bg-color);
+  border-left: 3px solid var(--blockquote-border-color) !important;
+  margin: 2em 0;
+  padding: 24px 32px;
+  position: relative;
+}
+
+.showmd blockquote.notice {
+  border-left: var(--blockquote-notice-border-color) 3px solid !important;
+  background-color: var(--blockquote-notice-bg-color) !important;
+  color: var(--blockquote-notice-text-color) !important;
+}
+
+.showmd blockquote.notice strong {
+  color: var(--blockquote-notice-strong-text-color) !important;
+}
+
+.showmd blockquote.notice code:not(.hljs):not(.highlight-chroma) {
+  background-color: var(--blockquote-notice-spancode-bg-color) !important;
+}
+
+.showmd blockquote.notice::before {
+  color: var(--blockquote-notice-before-text-color);
+}
+
+.showmd blockquote.notice::after {
+  color: var(--blockquote-notice-before-text-color);
+}
+
+.showmd blockquote::before {
+  content: "❝";
+  top: 8px;
+  left: 8px;
+  color: var(--blockquote-before-text-color);
+  font-size: 30px;
+  line-height: 1;
+  font-weight: 700;
+  position: absolute;
+  opacity: .7;
+}
+
+.showmd blockquote::after {
+  content: "❞";
+  font-size: 30px;
+  position: absolute;
+  right: 8px;
+  bottom: 0;
+  color: var(--blockquote-before-text-color);
+  opacity: .7;
+}
+
+.showmd blockquote>p {
+  margin-top: 22px !important;
+  margin-bottom: 22px !important;
+  letter-spacing: 2px;
+  word-spacing: 2px;
+}
+
+.showmd ol,
+.showmd ul {
+  padding-left: 30px;
+}
+
+.showmd ol li,
+.showmd ul li {
+  margin-bottom: 6px;
+}
+
+.showmd ol li .vditor-task,
+.showmd ul li .vditor-task {
+  list-style: none;
+}
+
+.showmd ol li .vditor-task ul,
+.showmd ol li .vditor-task ol,
+.showmd ul li .vditor-task ul,
+.showmd ul li .vditor-task ol {
+  margin-top: 6px;
+}
+
+.showmd ol ul,
+.showmd ol ol,
+.showmd ul ul,
+.showmd ul ol {
+  margin-top: 6px;
+}
+
+.showmd ol li {
+  padding-left: 6px;
+}
+
+.showmd ::marker {
+  color: var(--marker-text-color);
+}
+
+.showmd .contains-task-list {
+  padding-left: 0;
+}
+
+.showmd .vditor-task {
+  list-style: none;
+}
+
+.showmd .vditor-task input[type="checkbox"] {
+  position: relative;
+  font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", "Hiragino Sans GB", "Microsoft Yahei", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", "EmojiSymbols";
+}
+
+.showmd .vditor-task input[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  border: 1px solid var(--input-checkbox-border-color);
+  border-radius: 3px;
+  box-sizing: border-box;
+  z-index: 1;
+}
+
+.showmd .vditor-task input[type="checkbox"]:checked::after {
+  content: "\2713";
+  position: absolute;
+  top: -11px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  color: var(--input-checkbox-text-color);
+  font-size: 16px;
+  font-weight: bold;
+  z-index: 2;
+}
+
+.showmd table {
+  display: inline-block !important;
+  font-size: 14px;
+  width: auto;
+  max-width: 100%;
+  overflow: auto;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+.showmd table thead {
+  background: var(--table-thead-bg-color);
+  color: black;
+  text-align: left;
+  font-size: 15px;
+}
+
+.showmd table tr {
+  width: 100%;
+  padding: 12px 7px !important;
+  line-height: 22px;
+  background-color: transparent !important;
+}
+
+.showmd table tr:nth-child(2n) {
+  background-color: var(--table-tr-2n-bg-color) !important;
+}
+
+.showmd table tr:hover {
+  background-color: var(--table-tr-hover-bg-color) !important;
+}
+
+.showmd table th,
+.showmd table td {
+  padding: 12px 7px;
+  line-height: 24px;
+  border: 1px solid var(--table-thd-border-color) !important;
+  white-space: normal !important;
+}
+
+.showmd table td {
+  min-width: 120px;
+}
+
+.showmd h1:before {
+  width: 30px;
+  height: 30px;
+  background-size: 30px 30px;
+}
+
+.showmd h2:before {
+  width: 28px;
+  height: 28px;
+  background-size: 28px 28px;
+}
+
+.showmd h1:before,
+.showmd h2:before,
+.showmd h3:before,
+.showmd h4:before,
+.showmd h5:before,
+.showmd h6:before {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  animation: spin 5s linear 1s infinite;
+  background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNjUyMjU4NzY0MjU5IiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjQ3ODEiIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMzIiIGhlaWdodD0iMzIiPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+QGZvbnQtZmFjZSB7IGZvbnQtZmFtaWx5OiBmZWVkYmFjay1pY29uZm9udDsgc3JjOiB1cmwoIi8vYXQuYWxpY2RuLmNvbS90L2ZvbnRfMTAzMTE1OF91Njl3OHloeGR1LndvZmYyP3Q9MTYzMDAzMzc1OTk0NCIpIGZvcm1hdCgid29mZjIiKSwgdXJsKCIvL2F0LmFsaWNkbi5jb20vdC9mb250XzEwMzExNThfdTY5dzh5aHhkdS53b2ZmP3Q9MTYzMDAzMzc1OTk0NCIpIGZvcm1hdCgid29mZiIpLCB1cmwoIi8vYXQuYWxpY2RuLmNvbS90L2ZvbnRfMTAzMTE1OF91Njl3OHloeGR1LnR0Zj90PTE2MzAwMzM3NTk5NDQiKSBmb3JtYXQoInRydWV0eXBlIik7IH0KPC9zdHlsZT48L2RlZnM+PHBhdGggZD0iTTUxMS4wNDI1NiAxMTUuMzA3NTJsMTIxLjQ5NzYgMjc0LjMyNDQ4IDI5OC4zMjE5MiAzMS45NTkwNC0yMjMuMzYgMjAwLjMyNTEyIDYxLjc4ODE2IDI5My41ODU5Mi0yNTkuNTI3NjgtMTUwLjUyOC0yNjAuMTMxODQgMTQ5LjUwNCA2Mi45NTU1Mi0yOTMuMzYwNjQtMjIyLjU1NjE2LTIwMS4xOTU1MiAyOTguNDI5NDQtMzAuNzc2MzIgMTIyLjU4MzA0LTI3My44MzgwOHoiIGZpbGw9IiNGRjk2MkYiIHAtaWQ9IjQ3ODIiPjwvcGF0aD48L3N2Zz4=);
+}
+
+.showmd del {
+  color: var(--del-text-color);
+}
+
+.vditor-reset hr {
+  height: 0;
+  margin: 0;
+}
+
+.showmd .vditor-copy {
+  top: 12px;
+}
+
+.showmd .vditor-copy svg {
+  color: var(--code-copy-text-color) !important;
+}
+
+.showmd .vditor-copy>span::after {
+  background-color: var(--code-copy-bg-color);
+}
+
+.showmd .vditor-copy>span::before {
+  border-left-color: var(--code-copy-border-left-color);
+}
+
+@media (max-width: 720px) {
+  .showmd h1 {
+    font-size: 24px;
+  }
+
+  .showmd h2 {
+    font-size: 20px;
+  }
+
+  .showmd h3 {
+    font-size: 18px;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

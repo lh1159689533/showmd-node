@@ -1,36 +1,55 @@
 const dayjs = require('dayjs');
 const sharp = require('sharp');
 const Response = require('../utils/Response');
-const GithubService = require('./GithubService');
-const {
-  github: { repo, username, token },
-} = require('../config');
+const githubService = require('./GithubService');
+
+const IMAGE_TYPE = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
 class ImageService {
   constructor() {}
 
-  async upload(files) {
-    const { originalname: imgName, buffer } = files[0];
-    const [name, suffix] = imgName.split('.');
+  /**
+   * 图片上传到github仓库
+   * @param {File} file 
+   * @returns Response
+   */
+  async upload(file) {
+    const { originalname: imgName } = file;
+    const [name] = imgName.split('.');
     const fileName = `${dayjs().format('YYYY-MM-DD')}/${name}.webp`;
+    const fileContent = await this.compress(file);
+    const isSucc = await githubService.saveFileContent(fileName, fileContent);
+
+    const res = new Response();
+    if (isSucc) {
+      return res.success({ name: imgName, path: `showmd/file/preview?filename=${encodeURI(fileName)}`});
+    }
+    return res.fail('文件上传失败');
+  }
+
+  async preview(fileName) {
+    return await githubService.getRepoDirFileContent(fileName);
+  }
+
+  /**
+   * 图片压缩处理并转为webp格式
+   * @param {File} file 
+   * @returns 图片base64格式内容
+   */
+  async compress(file) {
+    // 只处理图片
+    if (!IMAGE_TYPE.includes(file?.mimetype)) {
+      return file;
+    }
+    const { buffer, mimetype } = file;
+    console.log("mimetype:", mimetype);
     let animated = false;
-    if (suffix === 'gif') {
+    if (mimetype === 'image/gif') {
       animated = true;
     }
     // 图片压缩并转为webp格式
     const data = await sharp(buffer, { animated }).webp().toBuffer();
-    const fileContent = data.toString('base64');
-    const isSucc = await new GithubService(username, repo, token).saveFileContent(fileName, fileContent);
-
-    const res = new Response();
-    if (isSucc) {
-      return res.success({ name: imgName, path: `showmd/file/preview?filename=${encodeURI(fileName)}`}).toString();
-    }
-    return res.fail('文件上传失败').toString();
-  }
-
-  async preview(fileName) {
-    return await new GithubService(username, repo, token).getRepoDirFileContent(fileName);
+    return data.toString('base64');
   }
 }
 

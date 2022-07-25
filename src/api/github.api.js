@@ -9,6 +9,8 @@ module.exports = {
     // 获取文件内容(base64编码)
     getRepoDirFileContent: 'repos/:username/:repo/contents/:filename',
     // 保存文件(base64编码)
-    saveFileContent: 'put repos/:username/:repo/contents/:path'
+    saveFileContent: 'put repos/:username/:repo/contents/:path',
+    // 删除文件
+    deleteFile: 'delete repos/:username/:repo/contents/:path',
   }
 };

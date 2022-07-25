@@ -13,7 +13,7 @@ class Response {
     this.message = message;
     this.data = data;
 
-    return this;
+    return this.toString();
   }
 
   fail(message = "failed") {
@@ -21,7 +21,7 @@ class Response {
     this.message = message;
     this.data = null;
 
-    return this;
+    return this.toString();
   }
 
   toString() {

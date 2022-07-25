@@ -21,8 +21,8 @@ class ArticleDao extends Dao {
       total: await Article.count(),
       pageNo,
       pageSize,
-      list: articles?.map((article) => article?.toJSON())
-    }
+      list: articles?.map((article) => article?.toJSON()),
+    };
     return data;
   }
 }

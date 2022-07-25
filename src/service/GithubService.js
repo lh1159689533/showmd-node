@@ -2,6 +2,9 @@ const http = require('../http');
 const api = require('../api');
 const logger = require('../logger');
 const Service = require('./Service');
+const {
+  github: { repo, username, token },
+} = require('../config');
 
 class GithubService extends Service {
   constructor(username, repo, token) {
@@ -100,7 +103,7 @@ class GithubService extends Service {
    * @param {String} filename 文件名
    */
   async saveFileContent(fileName, fileContent) {
-    const [err] = await http.request({
+    const [err, result] = await http.request({
       prefix: this.prefix,
       apiurl: api['github/saveFileContent'],
       headers: {
@@ -119,11 +122,36 @@ class GithubService extends Service {
 
     if (err) {
       logger.error(`保存文件${fileName}内容报错:`, err);
-      return false;
     }
     logger.info(`文件${fileName}内容已保存.`);
+    return result?.content;
+  }
+
+  /**
+   * 删除文件
+   * @param {String} fileName 文件名称
+   */
+  async deleteFile(fileName) {
+    const [err] = await http.request({
+      prefix: this.prefix,
+      apiurl: api['github/deleteFile'],
+      headers: {
+        Authorization: `token ${this.token}`
+      },
+      segment: {
+        username: this.username,
+        repo: this.repo,
+        path: encodeURI(fileName)
+      },
+    });
+
+    if (err) {
+      logger.error(`删除文件${fileName}报错:`, err);
+      return false;
+    }
+    logger.info(`文件${fileName}已删除.`);
     return true;
   }
 }
 
-module.exports = GithubService;
+module.exports = new GithubService(username, repo, token);

@@ -7,4 +7,5 @@ const {
 module.exports = new Sequelize({
   dialect,
   storage: path.resolve(storage),
+  // logging: logger.debug,
 });

@@ -11,9 +11,15 @@ class Dao {
     }
   }
   async update(modelData) {
-    const { id } = modelData;
-    const result = await this.model.update(modelData, { where: { id } });
-    return result !== 0;
+    try {
+      const primaryKey = this.model.primaryKeyAttribute;
+      const primaryKeyValue = modelData[primaryKey];
+      modelData.updateTime = new Date();
+      const result = await this.model.update(modelData, { where: { [primaryKey]: primaryKeyValue } });
+      return [result !== 0];
+    } catch (e) {
+      return [null, e];
+    }
   }
   async findById(id) {
     const modelData = await this.model.findByPk(id);
@@ -35,7 +41,8 @@ class Dao {
     return data;
   }
   async delete(id) {
-    const result = await this.model.destroy({ where: { id } });
+    const primaryKey = this.model.primaryKeyAttribute;
+    const result = await this.model.destroy({ where: { [primaryKey]: id } });
     return result !== 0;
   }
 }

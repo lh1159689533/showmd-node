@@ -3,6 +3,17 @@ class Dao {
     this.model = model;
   }
   async save(modelData) {
+    if (modelData?.id) {
+      const [isSucc, err] = await this.update(modelData);
+      if (isSucc) {
+        return [modelData.id, null];
+      } else {
+        return [null, err];
+      }
+    }
+    return await this.insert(modelData);
+  }
+  async insert(modelData) {
     try {
       const result = await this.model.create(modelData);
       return [result?.id, null];
@@ -26,8 +37,12 @@ class Dao {
     return modelData?.toJSON();
   }
   async findAll() {
-    const modelDatas = await this.model.findAll();
-    return modelDatas?.map((md) => md?.toJSON());
+    try {
+      const modelDatas = await this.model.findAll();
+      return [modelDatas?.map((md) => md?.toJSON()), null];
+    } catch (e) {
+      return [e, null];
+    }
   }
   async findByPage(page) {
     const { pageNo, pageSize } = page;

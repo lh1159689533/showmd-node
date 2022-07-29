@@ -1,17 +1,18 @@
 const Dao = require('./Dao');
 const Article = require('../model/Article');
 const User = require('../model/User');
+const Cover = require('../model/Cover');
 
 class ArticleDao extends Dao {
   constructor() {
     super(Article);
   }
   async findById(id) {
-    const article = await Article.findByPk(id, { include: User });
+    const article = await Article.findByPk(id, { include: [User, Cover] });
     return article?.toJSON();
   }
   async findAll() {
-    const articles = await Article.findAll({ include: User });
+    const articles = await Article.findAll({ include: User, attributes: { exclude: ['content'] } });
     return articles?.map((article) => article?.toJSON());
   }
   async findByPage(page) {

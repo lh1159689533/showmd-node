@@ -1,7 +1,6 @@
 const { DataTypes, NOW } = require('sequelize');
 const sequelize = require('../db/sequelize');
 const User = require('./User');
-const Cover = require('./Cover');
 const dayjs = require('dayjs');
 
 // 文章
@@ -18,6 +17,8 @@ const Article = sequelize.define(
     tags: DataTypes.STRING,
     category: DataTypes.STRING,
     summary: DataTypes.STRING,
+    codeTheme: DataTypes.STRING,
+    contentTheme: DataTypes.STRING,
     userId: {
       // 关联用户
       type: DataTypes.INTEGER,
@@ -48,10 +49,8 @@ const Article = sequelize.define(
   }
 );
 
-// 用户与文章为一对多关系，关联外键creator
+// 用户与文章为一对多关系
 User.hasMany(Article);
 Article.belongsTo(User);
-
-Article.hasOne(Cover);
 
 module.exports = Article;

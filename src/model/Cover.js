@@ -6,16 +6,17 @@ const Article = require('./Article');
 const Cover = sequelize.define(
   'cover',
   {
-    md5: {
+    id: {
       // md5值
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: false,
+      autoIncrement: true,
     },
-    path: DataTypes.STRING, // 路径
+    name: DataTypes.STRING,
+    content: DataTypes.TEXT, // 封面base64数据
     articleId: {
       // 关联文章
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       references: {
         model: Article,
         key: 'id',
@@ -23,10 +24,12 @@ const Cover = sequelize.define(
     },
   },
   {
-    tableName: 'cover',
+    tableName: 'article_cover',
     timestamps: false,
     underscored: true,
   }
 );
+
+Article.hasOne(Cover);
 
 module.exports = Cover;

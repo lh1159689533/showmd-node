@@ -122,6 +122,7 @@ class GithubService extends Service {
 
     if (err) {
       logger.error(`保存文件${fileName}内容报错:`, err);
+      return null;
     }
     logger.info(`文件${fileName}内容已保存.`);
     return result?.content;

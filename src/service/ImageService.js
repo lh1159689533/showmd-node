@@ -16,7 +16,7 @@ class ImageService {
   async upload(file) {
     const { originalname: imgName } = file;
     const [name] = imgName.split('.');
-    const fileName = `${dayjs().format('YYYY-MM-DD')}/${name}.webp`;
+    const fileName = `${dayjs().format('YYYY-MM-DD')}/${name}_${dayjs().format('YYYYMMDDHHmmss')}.webp`;
     const fileContent = await this.compress(file);
     const isSucc = await githubService.saveFileContent(fileName, fileContent);
 
@@ -42,7 +42,6 @@ class ImageService {
       return file;
     }
     const { buffer, mimetype } = file;
-    console.log("mimetype:", mimetype);
     let animated = false;
     if (mimetype === 'image/gif') {
       animated = true;

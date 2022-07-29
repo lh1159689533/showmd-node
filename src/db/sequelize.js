@@ -1,5 +1,6 @@
 const { Sequelize } = require('sequelize');
 const path = require('path');
+const logger = require('../logger');
 const {
   db: { dialect, storage },
 } = require('../config');
@@ -7,5 +8,5 @@ const {
 module.exports = new Sequelize({
   dialect,
   storage: path.resolve(storage),
-  // logging: logger.debug,
+  logging: msg => logger.debug(msg),
 });

@@ -30,7 +30,8 @@ class ArticleService {
       return;
     }
     const name = `${articleName}_cover.webp`;
-    const content = await new ImageService().compress(coverFile);
+    logger.info(name);
+    const content = await new ImageService().compressAndResize(coverFile, { width: 200, height: 160 });
     let cover = await coverDao.findByArticleId(articleId);
     if (cover) {
       cover = { ...cover, name, content };
@@ -45,7 +46,7 @@ class ArticleService {
     const res = new Response();
     const articles = await articleDao.findAll();
     if (articles) {
-      return res.success(articles);
+      return res.success(articles.map(item => ({ ...item, cover: `/api/showmd/article/cover/${item.id}` })));
     } else {
       logger.error('查询文章列表出错');
       return res.fail([]);
@@ -59,7 +60,7 @@ class ArticleService {
     if (article) {
       if (article.cover) {
         article.cover = {
-          name: article.cover?.path,
+          name: article.cover?.name,
           url: `/api/showmd/article/cover/${id}`,
         };
       }

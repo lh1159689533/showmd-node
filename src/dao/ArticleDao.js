@@ -8,11 +8,11 @@ class ArticleDao extends Dao {
     super(Article);
   }
   async findById(id) {
-    const article = await Article.findByPk(id, { include: [User, Cover] });
+    const article = await Article.findByPk(id, { include: [User, { model: Cover, attributes: ['name'] }] });
     return article?.toJSON();
   }
   async findAll() {
-    const articles = await Article.findAll({ include: User, attributes: { exclude: ['content'] } });
+    const articles = await Article.findAll({ include: [User], attributes: { exclude: ['content'] } });
     return articles?.map((article) => article?.toJSON());
   }
   async findByPage(page) {

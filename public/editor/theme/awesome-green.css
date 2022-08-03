@@ -112,7 +112,7 @@
   content: " ";
   position: absolute;
   display: block;
-  width: calc(100% - 320px);
+  width: calc(100% - 560px);
   border-bottom: 3px solid var(--h1_6-border-color);
 }
 

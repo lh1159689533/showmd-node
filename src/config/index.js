@@ -7,7 +7,7 @@ module.exports = {
   github: {
     username: 'lh1159689533',
     repo: 'myImageServer',
-    token: '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',
+    token: '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',
   },
   db: {
     dialect: 'sqlite',

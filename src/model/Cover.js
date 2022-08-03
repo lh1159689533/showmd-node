@@ -7,7 +7,6 @@ const Cover = sequelize.define(
   'cover',
   {
     id: {
-      // md5值
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,

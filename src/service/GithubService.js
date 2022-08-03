@@ -64,7 +64,7 @@ class GithubService extends Service {
     if (err) {
       logger.error(`获取目录${directory}下文件列表报错:`, err);
     } else {
-      logger.info(`目录${directory}下文件列表已获取.`);
+      logger.debug(`目录${directory}下文件列表已获取.`);
     }
 
     return result || [];
@@ -94,7 +94,7 @@ class GithubService extends Service {
       return null;
     }
 
-    logger.info(`文件${filename}内容已获取.`);
+    logger.debug(`文件${filename}内容已获取.`);
     return (result && Buffer.from(result.content, 'base64'));
   }
 
@@ -124,7 +124,7 @@ class GithubService extends Service {
       logger.error(`保存文件${fileName}内容报错:`, err);
       return null;
     }
-    logger.info(`文件${fileName}内容已保存.`);
+    logger.debug(`文件${fileName}内容已保存.`);
     return result?.content;
   }
 

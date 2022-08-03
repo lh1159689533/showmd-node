@@ -52,17 +52,24 @@ const contentThemeList = [
 ];
 
 Category.bulkCreate([
+  { value: 'all', label: '综合' },
   { value: 'front-dev', label: '前端' },
   { value: 'backend-dev', label: '后端' },
 ]);
 
 Tag.bulkCreate([
-  { value: 'JavaScript', label: 'JavaScript' },
-  { value: 'Vue.js', label: 'Vue.js' },
-  { value: 'React.js', label: 'React.js' },
-  { value: 'CSS', label: 'CSS' },
-  { value: 'Node.js', label: 'Node.js' },
-  { value: 'TypeScript', label: 'TypeScript' },
+  { value: 'JavaScript', label: 'JavaScript', categoryValue: 'front-dev' },
+  { value: 'Vue.js', label: 'Vue.js', categoryValue: 'front-dev' },
+  { value: 'React.js', label: 'React.js', categoryValue: 'front-dev' },
+  { value: 'CSS', label: 'CSS', categoryValue: 'front-dev' },
+  { value: 'Node.js', label: 'Node.js', categoryValue: 'front-dev' },
+  { value: 'TypeScript', label: 'TypeScript', categoryValue: 'front-dev' },
+
+  { value: 'Java', label: 'Java', categoryValue: 'backend-dev' },
+  { value: 'SQL', label: 'SQL', categoryValue: 'backend-dev' },
+  { value: 'MySQL', label: 'MySQL', categoryValue: 'backend-dev' },
+  { value: '算法', label: '算法', categoryValue: 'backend-dev' },
+  { value: 'Python', label: 'Python', categoryValue: 'backend-dev' },
 ]);
 
 ContentTheme.bulkCreate(contentThemeList);

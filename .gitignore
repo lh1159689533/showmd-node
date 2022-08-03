@@ -25,4 +25,4 @@ typings
 *.sw?
 
 .history
-db
+db/*

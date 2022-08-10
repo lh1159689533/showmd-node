@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db/sequelize');
-const Tag = require('./Tag');
 
 // 分类
 const Category = sequelize.define(
@@ -12,6 +11,10 @@ const Category = sequelize.define(
       autoIncrement: false,
     },
     label: DataTypes.STRING,
+    parentValue: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
   },
   {
     tableName: 'category',
@@ -19,8 +22,5 @@ const Category = sequelize.define(
     underscored: true,
   }
 );
-
-Category.hasMany(Tag);
-Tag.belongsTo(Category);
 
 module.exports = Category;

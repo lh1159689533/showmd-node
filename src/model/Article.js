@@ -19,6 +19,10 @@ const Article = sequelize.define(
     summary: DataTypes.STRING,
     codeTheme: DataTypes.STRING,
     contentTheme: DataTypes.STRING,
+    readCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
+    },
     userId: {
       // 关联用户
       type: DataTypes.INTEGER,

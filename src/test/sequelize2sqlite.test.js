@@ -1,16 +1,11 @@
-// const { Model, DataTypes, NOW } = require('sequelize');
-// const dayjs = require('dayjs');
-
-const sequelize = require('../db/sequelize');
-// const TagDao = require('../dao/TagDao');
-// const ArticleDao = require('../dao/ArticleDao');
-const Cover = require('../model/Cover');
-const Article = require('../model/Article');
-
+const fs = require('fs').promises;
+const path = require('path');
+const Avatar = require('../model/Avatar');
 
 (async () => {
-  // sequelize.sync({ force: true });
-  const result = await Cover.destroy({ where: { articleId: 1 } });
-  console.log(result);
-  // User.create({ name: 'dsds', password: '222' });
+  fs.readFile(path.resolve('public/avatars.jpeg')).then(buffer => {
+    Avatar.create({ content: buffer, userId: 1 });
+  }).catch(e => {
+    console.log(e);
+  });
 })();

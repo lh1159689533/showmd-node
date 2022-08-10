@@ -49,7 +49,7 @@ class ImageService {
     // 图片压缩并转为webp格式
     const data = await sharp(buffer, { animated }).webp().toBuffer();
 
-    return data.toString('base64');
+    return data;
   }
 
   /**
@@ -71,7 +71,7 @@ class ImageService {
     const { width, height} = resize;
     const data = await sharp(buffer, { animated }).resize({ width, height, fit: 'fill' }).webp().toBuffer();
 
-    return data.toString('base64');
+    return data;
   }
 }
 

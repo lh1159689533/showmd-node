@@ -8,7 +8,7 @@ const {
 
 class GithubService extends Service {
   constructor(username, repo, token) {
-    super({ username, repo, token });
+    super({ username, repo, token: Buffer.from(token, 'base64').toString() });
     this.prefix = 'https://api.github.com/';
   }
 

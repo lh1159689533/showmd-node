@@ -13,7 +13,7 @@ const sequelize = require('./sequelize');
     models.forEach((model) => {
       require(path.resolve(`src/model/${model}`));
     });
-    await sequelize.sync({ force: true });
+    await sequelize.sync();
     console.log('数据库表已成功初始化.');
   } catch (error) {
     console.error('数据库表初始化失败:', error);

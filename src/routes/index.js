@@ -5,6 +5,8 @@ const ArticleService = require('../service/ArticleService');
 const ImageService = require('../service/ImageService');
 const ThemeService = require('../service/ThemeService');
 const CategoryService = require('../service/CategoryService');
+const UserService = require('../service/UserService');
+const RoleMenuService = require('../service/RoleMenuService');
 
 /**
  * 新建文章
@@ -18,7 +20,7 @@ router.post('/showmd/article/create', multer({ preservePath: true }).single('cov
 /**
  * 文章列表
  */
-router.get('/showmd/article/list', async (_, res) => {
+router.get('/showmd/list/article', async (_, res) => {
   const result = await new ArticleService().list();
   res.send(result);
 });
@@ -59,7 +61,7 @@ router.get('/showmd/article/cover/:id', async (req, res) => {
 /**
  * Markdown内容主题列表
  */
-router.get('/showmd/theme/content/list', async (req, res) => {
+router.get('/showmd/list/theme/content', async (req, res) => {
   const result = await new ThemeService().listContentTheme();
   res.send(result);
 });
@@ -67,7 +69,7 @@ router.get('/showmd/theme/content/list', async (req, res) => {
 /**
  * Markdown代码主题列表
  */
-router.get('/showmd/theme/code/list', async (req, res) => {
+router.get('/showmd/list/theme/code', async (req, res) => {
   const result = await new ThemeService().listCodeTheme();
   res.send(result);
 });
@@ -75,16 +77,32 @@ router.get('/showmd/theme/code/list', async (req, res) => {
 /**
  * 文章分类列表
  */
-router.get('/showmd/category/list', async (_, res) => {
+router.get('/showmd/list/category', async (_, res) => {
   const result = await new CategoryService().listCategory();
   res.send(result);
 });
 
 /**
- * 文章子分类列表
+ * 根据id查询用户
  */
-router.get('/showmd/tag/list', async (_, res) => {
-  const result = await new CategoryService().listSubCategory();
+router.get('/showmd/user/:id', async (req, res) => {
+  const result = await new UserService().findUserById(req.params.id);
+  res.send(result);
+});
+
+/**
+ * 根据用户id查询用户头像
+ */
+router.get('/showmd/user/avatar/:id', async (req, res) => {
+  const result = await new UserService().findUserAvatar(req.params.id);
+  res.send(result);
+});
+
+/**
+ * 根据角色id查询菜单列表
+ */
+router.get('/showmd/list/menu/:roleId', async (req, res) => {
+  const result = await new RoleMenuService().listMenuByRoleId(req.params.roleId);
   res.send(result);
 });
 

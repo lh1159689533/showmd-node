@@ -21,15 +21,14 @@ app.use('/', router);
 // error handler
 app.use(function (err, req, res) {
   // set locals, only providing error in development
-  console.log('res.locals:', res);
   if (res.locals) {
     res.locals.message = err?.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
   }
 
   // render the error page
-  res.status(err.status || 500);
-  res.end('404');
+  res.status?.(err.status || 500);
+  res.end?.('404');
 });
 
 module.exports = app;

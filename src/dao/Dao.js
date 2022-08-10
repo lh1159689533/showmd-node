@@ -2,6 +2,7 @@ class Dao {
   constructor(model) {
     this.model = model;
   }
+
   async save(modelData) {
     if (modelData?.id) {
       const [isSucc, err] = await this.update(modelData);
@@ -13,6 +14,7 @@ class Dao {
     }
     return await this.insert(modelData);
   }
+
   async insert(modelData) {
     try {
       const result = await this.model.create(modelData);
@@ -21,21 +23,25 @@ class Dao {
       return [null, e];
     }
   }
+
   async update(modelData) {
     try {
       const primaryKey = this.model.primaryKeyAttribute;
       const primaryKeyValue = modelData[primaryKey];
       modelData.updateTime = new Date();
+      console.log('modelData:', modelData);
       const result = await this.model.update(modelData, { where: { [primaryKey]: primaryKeyValue } });
       return [result !== 0];
     } catch (e) {
       return [null, e];
     }
   }
+
   async findById(id) {
     const modelData = await this.model.findByPk(id);
     return modelData?.toJSON();
   }
+
   async findAll() {
     try {
       const modelDatas = await this.model.findAll();
@@ -44,6 +50,7 @@ class Dao {
       return [e, null];
     }
   }
+
   async findByPage(page) {
     const { pageNo, pageSize } = page;
     const modelDatas = await this.model.findAll({ offset: pageNo - 1, limit: pageSize });
@@ -55,6 +62,7 @@ class Dao {
     };
     return data;
   }
+
   async delete(id) {
     const primaryKey = this.model.primaryKeyAttribute;
     const result = await this.model.destroy({ where: { [primaryKey]: id } });

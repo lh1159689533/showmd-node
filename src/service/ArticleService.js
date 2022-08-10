@@ -31,7 +31,7 @@ class ArticleService {
     }
     const name = `${articleName}_cover.webp`;
     logger.info(name);
-    const content = await new ImageService().compressAndResize(coverFile, { width: 200, height: 160 });
+    const content = await new ImageService().compressAndResize(coverFile, { width: 160, height: 120 });
     let cover = await coverDao.findByArticleId(articleId);
     if (cover) {
       cover = { ...cover, name, content };
@@ -64,6 +64,12 @@ class ArticleService {
           url: `/api/showmd/article/cover/${id}`,
         };
       }
+      if (article.user) {
+        article.user = {
+          ...article.user,
+          avatar: `/api/showmd/user/avatar/${article.user.id}`
+        };
+      }
       return res.success({ ...article });
     } else {
       logger.error('文章不存在:', id);
@@ -75,7 +81,7 @@ class ArticleService {
     const coverDao = new CoverDao();
     const cover = await coverDao.findByArticleId(articleId);
     if (cover) {
-      return Buffer.from(cover.content, 'base64');
+      return cover.content;
     }
     return '';
   }

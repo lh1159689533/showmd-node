@@ -7,6 +7,7 @@ const ThemeService = require('../service/ThemeService');
 const CategoryService = require('../service/CategoryService');
 const UserService = require('../service/UserService');
 const RoleMenuService = require('../service/RoleMenuService');
+const CommentService = require('../service/CommentService');
 
 /**
  * 新建文章
@@ -20,8 +21,16 @@ router.post('/showmd/article/create', multer({ preservePath: true }).single('cov
 /**
  * 文章列表
  */
-router.get('/showmd/list/article', async (_, res) => {
-  const result = await new ArticleService().list();
+router.post('/showmd/list/article', async (req, res) => {
+  const result = await new ArticleService().list(req.body);
+  res.send(result);
+});
+
+/**
+ * 热门文章列表
+ */
+router.post('/showmd/toplist/article', async (req, res) => {
+  const result = await new ArticleService().toplist(req.body);
   res.send(result);
 });
 
@@ -43,15 +52,15 @@ router.post('/showmd/file/upload', multer({ preservePath: true }).single('file[]
 });
 
 /**
- * 预览图片(github图片服务器)
+ * 预览图片
  */
-router.get('/showmd/file/preview', async (req, res) => {
-  const result = await new ImageService().preview(req.query.filename);
+router.get('/showmd/file/preview/:id', async (req, res) => {
+  const result = await new ImageService().preview(req.params.id);
   res.send(result);
 });
 
 /**
- * 预览图片(本地库图片)
+ * 文章封面
  */
 router.get('/showmd/article/cover/:id', async (req, res) => {
   const result = await new ArticleService().findArticleCover(req.params.id);
@@ -103,6 +112,46 @@ router.get('/showmd/user/avatar/:id', async (req, res) => {
  */
 router.get('/showmd/list/menu/:roleId', async (req, res) => {
   const result = await new RoleMenuService().listMenuByRoleId(req.params.roleId);
+  res.send(result);
+});
+
+/**
+ * 查询文章下全部评论
+ */
+router.get('/showmd/list/:type/:id', async (req, res) => {
+  const result = await new CommentService().list(req.params.id, req.params.type);
+  res.send(result);
+});
+
+/**
+ * 添加评论/回复
+ */
+router.put('/showmd/save/:type', async (req, res) => {
+  const result = await new CommentService().create(req.body, req.params.type);
+  res.send(result);
+});
+
+/**
+ * 删除评论/回复
+ */
+router.delete('/showmd/delete/:type/:id', async (req, res) => {
+  const result = await new CommentService().deleteById(req.params.id, req.params.type);
+  res.send(result);
+});
+
+/**
+ * 点赞评论/回复
+ */
+router.post('/showmd/:type/digg', async (req, res) => {
+  const result = await new CommentService().digg(req.body, req.params.type);
+  res.send(result);
+});
+
+/**
+ * 取消点赞评论/回复
+ */
+router.post('/showmd/:type/undigg', async (req, res) => {
+  const result = await new CommentService().undigg(req.body, req.params.type);
   res.send(result);
 });
 

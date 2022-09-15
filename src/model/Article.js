@@ -1,7 +1,7 @@
 const { DataTypes, NOW } = require('sequelize');
+const dayjs = require('dayjs');
 const sequelize = require('../db/sequelize');
 const User = require('./User');
-const dayjs = require('dayjs');
 
 // 文章
 const Article = sequelize.define(

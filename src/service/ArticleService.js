@@ -7,6 +7,11 @@ const ImageService = require('../service/ImageService');
 class ArticleService {
   constructor() {}
 
+  /**
+   * 新建/更新文章
+   * @param {Object} article 文章
+   * @param {File} cover 文章封面
+   */
   async create(article, cover) {
     const res = new Response();
     const articleDao = new ArticleDao();
@@ -24,6 +29,12 @@ class ArticleService {
     return res.success(id);
   }
 
+  /**
+   * 保存文章封面
+   * @param {File} coverFile 文章封面
+   * @param {Number} articleId 文章id
+   * @param {String} articleName 文章名称
+   */
   async saveCover(coverFile, articleId, articleName) {
     const coverDao = new CoverDao();
     if (!coverFile) {
@@ -31,7 +42,7 @@ class ArticleService {
     }
     const name = `${articleName}_cover.webp`;
     logger.info(name);
-    const content = await new ImageService().compressAndResize(coverFile, { width: 160, height: 120 });
+    const content = await new ImageService().compressAndResize(coverFile, { width: 120, height: 80 });
     let cover = await coverDao.findByArticleId(articleId);
     if (cover) {
       cover = { ...cover, name, content };
@@ -41,10 +52,15 @@ class ArticleService {
     coverDao.save(cover);
   }
 
-  async list() {
+  /**
+   * 文章列表
+   */
+  async list(params) {
+    const filters = params?.filters ?? {};
+    const order = params?.order ?? null;
     const articleDao = new ArticleDao();
     const res = new Response();
-    const articles = await articleDao.findAll();
+    const articles = await articleDao.findAll(filters, order);
     if (articles) {
       return res.success(articles.map(item => ({ ...item, cover: `/api/showmd/article/cover/${item.id}` })));
     } else {
@@ -53,6 +69,25 @@ class ArticleService {
     }
   }
 
+  /**
+   * 热门文章列表
+   */
+  async toplist() {
+    const articleDao = new ArticleDao();
+    const res = new Response();
+    const articles = await articleDao.findTop();
+    if (articles) {
+      return res.success(articles);
+    } else {
+      logger.error('查询文章列表出错');
+      return res.fail([]);
+    }
+  }
+
+  /**
+   * 根据id查询文章
+   * @param {Number} id 文章id
+   */
   async findById(id) {
     const articleDao = new ArticleDao();
     const res = new Response();
@@ -77,6 +112,10 @@ class ArticleService {
     }
   }
 
+  /**
+   * 根据文章id查询文章封面
+   * @param {Number} articleId 文章id
+   */
   async findArticleCover(articleId) {
     const coverDao = new CoverDao();
     const cover = await coverDao.findByArticleId(articleId);

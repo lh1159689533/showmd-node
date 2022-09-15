@@ -46,6 +46,7 @@
     "body-parser": "^1.20.0",
     "dayjs": "^1.11.1",
     "multer": "^1.4.4",
+    "object-hash": "^3.0.0",
     "sequelize": "^7.0.0-alpha2.1",
     "sharp": "^0.30.7"
   },

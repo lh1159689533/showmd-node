@@ -2,6 +2,7 @@ const dayjs = require('dayjs');
 const sharp = require('sharp');
 const Response = require('../utils/Response');
 const githubService = require('./GithubService');
+const ImageDao = require('../dao/ImageDao');
 
 const IMAGE_TYPE = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
 
@@ -13,7 +14,7 @@ class ImageService {
    * @param {File} file
    * @returns Response
    */
-  async upload(file) {
+  async uploadToGithub(file) {
     const { originalname: imgName } = file;
     const [name] = imgName.split('.');
     const fileName = `${dayjs().format('YYYY-MM-DD')}/${name}_${dayjs().format('YYYYMMDDHHmmss')}.webp`;
@@ -27,8 +28,37 @@ class ImageService {
     return res.fail('文件上传失败');
   }
 
-  async preview(fileName) {
+  async previewFromGithub(fileName) {
     return await githubService.getRepoDirFileContent(fileName);
+  }
+
+  /**
+   * 图片上传
+   * @param {File} file
+   * @returns Response
+   */
+  async upload(file) {
+    const { originalname: imgName } = file;
+    const [name] = imgName.split('.');
+    const fileName = `${dayjs().format('YYYY-MM-DD')}/${name}_${dayjs().format('YYYYMMDDHHmmss')}.webp`;
+    const fileContent = await this.compress(file);
+    const [id, err] = await new ImageDao().save({ name: fileName, content: fileContent });
+
+    const res = new Response();
+    if (!err) {
+      return res.success({ name: imgName, path: `showmd/file/preview/${id}` });
+    }
+    return res.fail('文件上传失败');
+  }
+
+  /**
+   * 图片预览
+   * @param {Number} id 图片id
+   * @returns base64/image
+   */
+  async preview(id) {
+    const image = await new ImageDao().findById(id);
+    return image?.content;
   }
 
   /**
@@ -47,7 +77,7 @@ class ImageService {
       animated = true;
     }
     // 图片压缩并转为webp格式
-    const data = await sharp(buffer, { animated }).webp().toBuffer();
+    const data = await sharp(buffer, { animated }).trim().webp().toBuffer();
 
     return data;
   }
@@ -69,7 +99,7 @@ class ImageService {
       animated = true;
     }
     const { width, height} = resize;
-    const data = await sharp(buffer, { animated }).resize({ width, height, fit: 'fill' }).webp().toBuffer();
+    const data = await sharp(buffer, { animated }).resize({ width, height, fit: 'fill' }).trim().webp().toBuffer();
 
     return data;
   }

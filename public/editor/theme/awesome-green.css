@@ -126,9 +126,66 @@
   margin-top: 5px;
 }
 
-.showmd pre {
+.showmd .code-block {
+  border: 1px solid var(--code-border-color);
+  box-shadow: 0px 3px 10px -6px #666;
+  border-radius: 3px;
+  margin: 10px 0 10px 0;
+}
+
+.showmd .code-block .code-content {
   position: relative;
+  overflow: auto;
+  max-height: 500px;
+  transition: max-height 300ms;
+}
+
+.showmd .code-block .code-content::-webkit-scrollbar-track-piece {
+  /* 滚动条没有滑块的轨道部分 */
+  background: linear-gradient(180deg, rgba(66, 185, 131, .1), transparent);
+}
+
+.showmd .code-block .code-suofang-checkbox:checked ~ div.code-content {
+  max-height: 0;
+}
+
+.showmd .code-block .code-block-menus {
+  display: flex;
+  background-color: var(--code-border-color);
+  height: 1.2em;
+  align-items: center;
+}
+
+.showmd .code-block .code-block-menus>label:nth-child(1) {
+  margin-left: 16px;
+  background-color: #F87171;
+}
+
+.showmd .code-block .code-block-menus>label:nth-child(2) {
+  background-color: #FBBF24;
+  cursor: pointer;
+}
+
+.showmd .code-block .code-block-menus>label:nth-child(3) {
+  background-color: #34D399;
+}
+
+.showmd .code-block .code-block-menus>label {
+  margin-left: 4px;
+  margin-right: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.showmd pre {
   line-height: 1.75;
+  margin: 0;
+  box-shadow: 1px 1px 10px -1px #ddd;
 }
 
 .showmd pre>code {
@@ -139,9 +196,8 @@
   display: block;
   overflow-x: auto;
   color: var(--code-text-color);
-  border: 1px solid var(--code-border-color);
-  border-top: 8px solid var(--code-border-color);
   background: linear-gradient(180deg, rgba(66, 185, 131, .1), transparent) !important;
+  max-height: fit-content !important;
 }
 
 .showmd .vditor-copy {

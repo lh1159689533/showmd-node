@@ -1,8 +1,13 @@
+const { isJsonString } = require('../utils/dataParser');
 class Dao {
   constructor(model) {
     this.model = model;
   }
 
+  /**
+   * 新增/更新，id有值则更新
+   * @param {Model} modelData 
+   */
   async save(modelData) {
     if (modelData?.id) {
       const [isSucc, err] = await this.update(modelData);
@@ -29,7 +34,6 @@ class Dao {
       const primaryKey = this.model.primaryKeyAttribute;
       const primaryKeyValue = modelData[primaryKey];
       modelData.updateTime = new Date();
-      console.log('modelData:', modelData);
       const result = await this.model.update(modelData, { where: { [primaryKey]: primaryKeyValue } });
       return [result !== 0];
     } catch (e) {
@@ -67,6 +71,19 @@ class Dao {
     const primaryKey = this.model.primaryKeyAttribute;
     const result = await this.model.destroy({ where: { [primaryKey]: id } });
     return result !== 0;
+  }
+
+  /**
+   * 将sequelize查询数据库返回的ModelData转为JSON
+   * @param {Model} data 
+   * @returns JSON
+   */
+  toJson(data) {
+    const jsonStr = JSON.stringify(data, null, 2);
+    if (isJsonString(jsonStr)) {
+      return JSON.parse(jsonStr);
+    }
+    return data;
   }
 }
 

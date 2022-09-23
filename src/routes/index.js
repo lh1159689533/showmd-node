@@ -46,8 +46,18 @@ router.get('/showmd/article/findById', async (req, res) => {
  * Markdown上传图片
  * preservePath保存包含文件名的完整文件路径
  */
-router.post('/showmd/file/upload', multer({ preservePath: true }).single('file[]'), async (req, res) => {
+router.post('/showmd/file/upload', multer({ preservePath: true }).single('file'), async (req, res) => {
   const result = await new ImageService().upload(req.file);
+  res.send(result);
+});
+
+/**
+ * Markdown分片上传图片
+ * preservePath保存包含文件名的完整文件路径
+ */
+router.post('/showmd/file/sliceUpload', multer({ preservePath: true }).single('chunk'), async (req, res) => {
+  const { uploadId, chunkNum } = req.query;
+  const result = await new ImageService().sliceUpload(req.file, uploadId, chunkNum, req.body);
   res.send(result);
 });
 

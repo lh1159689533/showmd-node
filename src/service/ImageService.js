@@ -1,10 +1,11 @@
 const dayjs = require('dayjs');
 const sharp = require('sharp');
+const logger = require('../logger');
 const Response = require('../utils/Response');
 const githubService = require('./GithubService');
 const ImageDao = require('../dao/ImageDao');
-
-const IMAGE_TYPE = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
+const { uploadChunk, merge } = require('../utils/sliceUploadFile');
+const { isImageFile, isGIFImage } = require('../utils/types');
 
 class ImageService {
   constructor() {}
@@ -40,7 +41,7 @@ class ImageService {
   async upload(file) {
     const { originalname: imgName } = file;
     const [name] = imgName.split('.');
-    const fileName = `${dayjs().format('YYYY-MM-DD')}/${name}_${dayjs().format('YYYYMMDDHHmmss')}.webp`;
+    const fileName = `${name}_${dayjs().format('YYYYMMDDHHmmss')}.webp`;
     const fileContent = await this.compress(file);
     const [id, err] = await new ImageDao().save({ name: fileName, content: fileContent });
 
@@ -62,24 +63,60 @@ class ImageService {
   }
 
   /**
+   * 大图片分片上传
+   * @param {File} file
+   * @param {String} uploadId 上传id，标识同一个文件
+   * @param {Number} chunkNum 切片编号
+   * @param {Object} mergeData 合并数据
+   */
+  async sliceUpload(file, uploadId, chunkNum, mergeData) {
+    const res = new Response();
+    if (!mergeData?.merge) {
+      // 上传切片
+      const isSucc = await uploadChunk(file, uploadId, chunkNum);
+      if (isSucc) {
+        return res.success();
+      }
+      return res.fail();
+    } else {
+      // 合并
+      const fileName = `${mergeData.fileName}_${dayjs().format('YYYYMMDDHHmmss')}.webp`;
+      const fileContent = await merge(uploadId, mergeData.merge);
+      // 原始数据先入库，避免压缩图片慢导致阻塞，异步处理后更新到库
+      const [id, err] = await new ImageDao().save({ name: fileName, content: fileContent });
+      if (!err) {
+        // 压缩图片
+        this.compress({ buffer: fileContent, mimetype: mergeData.fileType }).then(data => {
+          new ImageDao().save({ id, content: data });
+        });
+        return res.success({ name: fileName, path: `showmd/file/preview/${id}` });
+      }
+      logger.error('文件上传失败: ', err);
+      return res.fail('文件上传失败');
+    }
+  }
+
+  /**
    * 图片压缩处理并转为webp格式
    * @param {File} file
    * @returns 图片base64格式内容
    */
   async compress(file) {
     // 只处理图片
-    if (!IMAGE_TYPE.includes(file?.mimetype)) {
+    if (!isImageFile(file)) {
       return file;
     }
-    const { buffer, mimetype } = file;
     let animated = false;
-    if (mimetype === 'image/gif') {
+    if (isGIFImage(file)) {
       animated = true;
     }
-    // 图片压缩并转为webp格式
-    const data = await sharp(buffer, { animated }).trim().webp().toBuffer();
-
-    return data;
+    try {
+      // 图片压缩并转为webp格式
+      return await sharp(file.buffer, { animated, limitInputPixels: false }).webp().toBuffer();
+    } catch (e) {
+      logger.error('图片压缩报错:', e);
+      return null;
+    }
   }
 
   /**
@@ -90,18 +127,20 @@ class ImageService {
    */
   async compressAndResize(file, resize) {
     // 只处理图片
-    if (!IMAGE_TYPE.includes(file?.mimetype) || !resize) {
+    if (!isImageFile(file) || !resize) {
       return file;
     }
-    const { buffer, mimetype } = file;
     let animated = false;
-    if (mimetype === 'image/gif') {
+    if (isGIFImage(file)) {
       animated = true;
     }
-    const { width, height} = resize;
-    const data = await sharp(buffer, { animated }).resize({ width, height, fit: 'fill' }).trim().webp().toBuffer();
-
-    return data;
+    const { width, height } = resize;
+    try {
+      return await sharp(file.buffer, { animated, limitInputPixels: false }).resize({ width, height, fit: 'fill' }).webp().toBuffer();
+    } catch (e) {
+      logger.error('图片压缩报错:', e);
+      return null;
+    }
   }
 }
 

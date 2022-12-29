@@ -1,8 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db/sequelize');
-const Article = require('./Article');
 
-// 文章封面
+// 封面
 const Cover = sequelize.define(
   'cover',
   {
@@ -11,24 +10,15 @@ const Cover = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    name: DataTypes.STRING,
-    content: DataTypes.TEXT, // 封面base64数据
-    articleId: {
-      // 关联文章
-      type: DataTypes.INTEGER,
-      references: {
-        model: Article,
-        key: 'id',
-      },
-    },
+    content: DataTypes.BLOB, // 封面base64数据
+    targetId: DataTypes.INTEGER,
+    type: DataTypes.INTEGER, // 封面类型: 1 文章 2专栏
   },
   {
-    tableName: 'article_cover',
+    tableName: 'cover',
     timestamps: false,
     underscored: true,
   }
 );
-
-Article.hasOne(Cover);
 
 module.exports = Cover;

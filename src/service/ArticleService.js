@@ -4,6 +4,8 @@ const ArticleDao = require('../dao/ArticleDao');
 const CoverDao = require('../dao/CoverDao');
 const ImageService = require('../service/ImageService');
 
+const { COVER_ARTICLE } = require('../constant');
+
 class ArticleService {
   constructor() {}
 
@@ -21,11 +23,12 @@ class ArticleService {
       return res.fail(`${article?.id ? '更新' : '新建'}文章出错`);
     }
     if (article?.coverMark === 'changed') {
-      this.saveCover(cover, id, article.name);
+      this.saveCover(cover, id);
     } else if (article?.coverMark === 'deleted') {
-      new CoverDao().deleteByArticleId(id);
+      new CoverDao().deleteByTargetId(id, COVER_ARTICLE);
     }
 
+    logger.debug(`${article?.id ? '更新' : '新建'}文章:`, article?.name);
     return res.success(id);
   }
 
@@ -33,21 +36,19 @@ class ArticleService {
    * 保存文章封面
    * @param {File} coverFile 文章封面
    * @param {Number} articleId 文章id
-   * @param {String} articleName 文章名称
    */
-  async saveCover(coverFile, articleId, articleName) {
+  async saveCover(coverFile, articleId) {
     const coverDao = new CoverDao();
     if (!coverFile) {
       return;
     }
-    const name = `${articleName}_cover.webp`;
-    logger.info(name);
+    // const name = `${articleName}_cover.webp`;
     const content = await new ImageService().compressAndResize(coverFile, { width: 120, height: 80 });
-    let cover = await coverDao.findByArticleId(articleId);
+    let cover = await coverDao.findByTargetId(articleId, COVER_ARTICLE);
     if (cover) {
-      cover = { ...cover, name, content };
+      cover = { ...cover, content, type: COVER_ARTICLE };
     } else {
-      cover = { name, content, articleId };
+      cover = { content, targetId: articleId, type: COVER_ARTICLE };
     }
     coverDao.save(cover);
   }
@@ -62,7 +63,7 @@ class ArticleService {
     const res = new Response();
     const articles = await articleDao.findAll(filters, order);
     if (articles) {
-      return res.success(articles.map(item => ({ ...item, cover: `/api/showmd/article/cover/${item.id}` })));
+      return res.success(articles.map((item) => ({ ...item, cover: `/api/showmd/article/cover/${item.id}` })));
     } else {
       logger.error('查询文章列表出错');
       return res.fail([]);
@@ -93,16 +94,16 @@ class ArticleService {
     const res = new Response();
     const article = await articleDao.findById(id);
     if (article) {
-      if (article.cover) {
+      const cover = await this.findArticleCover(id);
+      if (cover) {
         article.cover = {
-          name: article.cover?.name,
           url: `/api/showmd/article/cover/${id}`,
         };
       }
       if (article.user) {
         article.user = {
           ...article.user,
-          avatar: `/api/showmd/user/avatar/${article.user.id}`
+          avatar: `/api/showmd/user/avatar/${article.user.id}`,
         };
       }
       return res.success({ ...article });
@@ -113,12 +114,23 @@ class ArticleService {
   }
 
   /**
+   * 根据用户id查询文章
+   * @param {Number} userId 用户id
+   */
+  async findByUserId(userId, searchKeyword = '') {
+    const articleDao = new ArticleDao();
+    const res = new Response();
+    const article = await articleDao.findListByUserId(userId, searchKeyword);
+    return res.success(article ?? []);
+  }
+
+  /**
    * 根据文章id查询文章封面
    * @param {Number} articleId 文章id
    */
   async findArticleCover(articleId) {
     const coverDao = new CoverDao();
-    const cover = await coverDao.findByArticleId(articleId);
+    const cover = await coverDao.findByTargetId(articleId, COVER_ARTICLE);
     if (cover) {
       return cover.content;
     }

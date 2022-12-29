@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db/sequelize');
-const Menu = require('./Menu');
 const RoleMenu = require('./RoleMenu');
+const Menu = require('./Menu');
 
 // 角色
 const Role = sequelize.define(

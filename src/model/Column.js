@@ -1,19 +1,32 @@
 const { DataTypes, NOW } = require('sequelize');
 const dayjs = require('dayjs');
 const sequelize = require('../db/sequelize');
-const Role = require('./Role');
+const User = require('./User');
 
-// 用户
-const User = sequelize.define(
-  'user',
+// 专栏
+const Column = sequelize.define(
+  'column',
   {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       primaryKey: true,
       autoIncrement: true,
     },
     name: DataTypes.STRING,
-    password: DataTypes.STRING,
+    desc: DataTypes.STRING,
+    // articleCnt: DataTypes.INTEGER,
+    subscribeCnt: { // 订阅数
+      defaultValue: 0,
+      type: DataTypes.INTEGER
+    },
+    isTop: {
+      defaultValue: 0, // 是否置顶(0否 1是)
+      type: DataTypes.INTEGER
+    },
+    isPrivate: {
+      defaultValue: 0, // 是否私有(0公开 1私有)
+      type: DataTypes.INTEGER
+    },
     createTime: {
       type: DataTypes.DATE,
       defaultValue: NOW,
@@ -28,24 +41,24 @@ const User = sequelize.define(
         return dayjs(this.getDataValue('updateTime')).format('YYYY-MM-DD HH:mm:ss');
       },
     },
-    roleId: {
-      // 关联角色
+    userId: {
+      // 所属用户
       type: DataTypes.INTEGER,
       references: {
-        model: Role,
+        model: User,
         key: 'id',
       },
     }
   },
   {
-    tableName: 'user',
+    tableName: 'column',
     timestamps: false,
     underscored: true,
   }
 );
 
-// 用户与角色一对多关系
-Role.hasMany(User);
-User.belongsTo(Role);
+// 用户与专栏一对多关系
+User.hasMany(Column);
+Column.belongsTo(User);
 
-module.exports = User;
+module.exports = Column;

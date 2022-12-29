@@ -11,7 +11,7 @@ const Avatar = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    content: DataTypes.TEXT, // 头像base64数据
+    content: DataTypes.BLOB, // 头像base64数据
     userId: {
       // 关联用户
       type: DataTypes.INTEGER,

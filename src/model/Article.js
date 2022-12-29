@@ -2,6 +2,7 @@ const { DataTypes, NOW } = require('sequelize');
 const dayjs = require('dayjs');
 const sequelize = require('../db/sequelize');
 const User = require('./User');
+const Column = require('./Column');
 
 // 文章
 const Article = sequelize.define(
@@ -31,6 +32,14 @@ const Article = sequelize.define(
         key: 'id',
       },
     },
+    columnId: {
+      // 所属专栏
+      type: DataTypes.INTEGER,
+      references: {
+        model: Column,
+        key: 'id',
+      },
+    },
     createTime: {
       type: DataTypes.DATE,
       defaultValue: NOW,
@@ -56,5 +65,9 @@ const Article = sequelize.define(
 // 用户与文章为一对多关系
 User.hasMany(Article);
 Article.belongsTo(User);
+
+// 专栏与文章为一对多关系
+Column.hasMany(Article);
+Article.belongsTo(Column);
 
 module.exports = Article;

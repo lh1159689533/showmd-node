@@ -68,6 +68,7 @@ class CommentService {
   }
 
   async list(id, type) {
+    console.log(id, type)
     if (type === 'comment') {
       return this.listComment(id);
     } else {

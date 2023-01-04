@@ -63,11 +63,15 @@ const Article = sequelize.define(
 );
 
 // 用户与文章为一对多关系
-User.hasMany(Article);
+User.hasMany(Article, {
+  onDelete: 'RESTRICT' // 约束，删除用户时检查有无文章关联该用户，有则不允许删除
+});
 Article.belongsTo(User);
 
 // 专栏与文章为一对多关系
-Column.hasMany(Article);
+Column.hasMany(Article, {
+  onDelete: 'SET NULL' // 删除专栏时，关联该专栏的文章外键置为NULL
+});
 Article.belongsTo(Column);
 
 module.exports = Article;

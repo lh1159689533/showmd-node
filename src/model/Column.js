@@ -58,7 +58,9 @@ const Column = sequelize.define(
 );
 
 // 用户与专栏一对多关系
-User.hasMany(Column);
+User.hasMany(Column, {
+  onDelete: 'RESTRICT' // 约束，删除用户时检查有无专栏关联该用户，有则不允许删除
+});
 Column.belongsTo(User);
 
 module.exports = Column;

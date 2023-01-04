@@ -45,7 +45,9 @@ const User = sequelize.define(
 );
 
 // 用户与角色一对多关系
-Role.hasMany(User);
+Role.hasMany(User, {
+  onDelete: 'RESTRICT' // 约束，删除角色时检查有无用户关联该角色，有则不允许删除
+});
 User.belongsTo(Role);
 
 module.exports = User;

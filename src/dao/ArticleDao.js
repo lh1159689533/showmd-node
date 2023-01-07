@@ -13,7 +13,6 @@ class ArticleDao extends Dao {
     const article = await Article.findByPk(id, {
       include: [
         { model: User, attributes: ['id', 'name'] },
-        // { model: Cover, attributes: ['name'] },
       ],
     });
     article.update({ readCount: article.readCount + 1 });
@@ -56,7 +55,19 @@ class ArticleDao extends Dao {
    */
   async findAllByColumnId(columnId) {
     const articles = await Article.findAll({
-      attributes: { exclude: ['content'] },
+      attributes: {
+        exclude: ['content'],
+        include: [
+          [
+            sequelize.literal(`(
+              select sum(ct) from (
+                select count(*)  ct from comment as cm where cm.article_id = article.id union all 
+                select count(*)  ct from reply as rp where rp.comment_id in (select id from comment as cm where cm.article_id = article.id)
+              ))`),
+            'commentCount',
+          ],
+        ],
+      },
       where: {
         columnId,
       },
@@ -76,7 +87,7 @@ class ArticleDao extends Dao {
         },
         name: {
           [Op.like]: `%${searchKey}%`,
-        }
+        },
       },
     });
     return this.toJson(articles);

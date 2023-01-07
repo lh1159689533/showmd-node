@@ -9,6 +9,15 @@ class ColumnDao extends Dao {
     super(Column);
   }
 
+  async findById(id) {
+    const column = await Column.findByPk(id, {
+      attributes: {
+        include: [[sequelize.literal(`(select count(*) from article as art where art.column_id = column.id)`), 'articleCnt']],
+      },
+    });
+    return column?.toJSON();
+  }
+
   /**
    * 根据用户id查询专栏
    * @param {Number} userId 用户id

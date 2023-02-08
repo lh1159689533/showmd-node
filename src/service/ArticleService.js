@@ -120,8 +120,8 @@ class ArticleService {
   async findByUserId(userId, searchKeyword = '') {
     const articleDao = new ArticleDao();
     const res = new Response();
-    const article = await articleDao.findListByUserId(userId, searchKeyword);
-    return res.success(article ?? []);
+    const articles = await articleDao.findListByUserId(userId, searchKeyword);
+    return res.success(articles ?? []);
   }
 
   /**
@@ -135,6 +135,17 @@ class ArticleService {
       return cover.content;
     }
     return '';
+  }
+
+  /**
+   * 获取专栏上/下一篇文章
+   * @param {Number} articleId 文章id
+   */
+  async findSameColumnArticle(articleId, type = 'next') {
+    const articleDao = new ArticleDao();
+    const res = new Response();
+    const article = await articleDao.findSameColumnArticle(articleId, type);
+    return res.success(article);
   }
 }
 

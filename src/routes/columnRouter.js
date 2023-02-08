@@ -21,11 +21,11 @@ router.get('/findListByUserId', async (req, res) => {
 });
 
 /**
- * 添加/移除文章
+ * 添加/移除/移动文章
  */
 router.post('/articleOperate', async (req, res) => {
-  const { id, articleIds, action } = req.body ?? {};
-  const result = await new ColumnService().articleOperate(id, articleIds, action);
+  const { id, oid, articleIds, action } = req.body ?? {};
+  const result = await new ColumnService().articleOperate(id, oid, articleIds, action);
   res.send(result);
 });
 
@@ -75,6 +75,22 @@ router.get('/cover/:id', async (req, res) => {
  */
 router.get('/findById', async (req, res) => {
   const result = await new ColumnService().findById(req.query.id);
+  res.send(result);
+});
+
+/**
+ * 根据文章id查询专栏
+ */
+router.get('/findByArticleId', async (req, res) => {
+  const result = await new ColumnService().findByArticleId(req.query.articleId);
+  res.send(result);
+});
+
+/**
+ * 专栏下文章排序
+ */
+router.post('/sortArticle', async (req, res) => {
+  const result = await new ColumnService().sortArticle(req.body.columnId, req.body.articleIds);
   res.send(result);
 });
 

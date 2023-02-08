@@ -5,7 +5,7 @@ const ArticleDao = require('../dao/ArticleDao');
 const CoverDao = require('../dao/CoverDao');
 const ImageService = require('../service/ImageService');
 
-const { COVER_COLUMN } = require('../constant');
+const { COVER_COLUMN, COLUMN_OPERATE } = require('../constant');
 
 class ColumnService {
   constructor() {}
@@ -76,6 +76,25 @@ class ColumnService {
   }
 
   /**
+   * 查询文章所属专栏信息
+   * @param {Number} articleId 文章id
+   */
+  async findByArticleId(articleId) {
+    const columnDao = new ColumnDao();
+    const res = new Response();
+    const column = await columnDao.findByArticleId(articleId);
+    if (column) {
+      const cover = await this.findColumnCover(column.id);
+      if (cover) {
+        column.cover = {
+          url: `/api/showmd/column/cover/${column.id}`,
+        };
+      }
+    }
+    return res.success(column);
+  }
+
+  /**
    * 查询用户发布的专栏
    * @param {Number} userId 用户id
    */
@@ -85,7 +104,7 @@ class ColumnService {
 
     const columns = await columnDao.findListByUserId(userId, searchKeyword);
     if (columns) {
-      return res.success(columns.map(item => ({ ...item, cover: `/api/showmd/column/cover/${item.id}` })));
+      return res.success(columns.map((item) => ({ ...item, cover: `/api/showmd/column/cover/${item.id}` })));
     } else {
       logger.error('查询栏目列表出错');
       return res.fail([]);
@@ -108,7 +127,7 @@ class ColumnService {
     if (articles) {
       return res.success({
         ...column,
-        articles
+        articles: articles.sort((a, b) => a.order - b.order),
       });
     } else {
       logger.error('查询专栏下文章列表出错');
@@ -117,21 +136,35 @@ class ColumnService {
   }
 
   /**
-   * 添加/移除文章
+   * 添加/移除/移动文章
    * @param {Number} id 专栏id
+   * @param {Number} oid 原专栏id(移动文章时有效)
    * @param {Array} articleIds 文章id列表
-   * @param {Number} type 0 移除文章, 1 添加文章
+   * @param {Number} type 0 移除文章, 1 添加文章, 2 移动文章, 3 排序文章
    */
-  async articleOperate(id, articleIds, type) {
-    const articleDao = new ArticleDao();
+  async articleOperate(id, oid, articleIds, type) {
+    const columnDao = new ColumnDao();
     const res = new Response();
-    const updateData = { columnId: type === 1 ? id : null };
-    const isSucc = await articleDao.bulkUpdate(articleIds, updateData);
+    let isSucc = false;
+    let log = '';
+    if (type === COLUMN_OPERATE.ADD) {
+      log = '添加到专栏';
+      isSucc = await columnDao.addArticle(id, articleIds);
+    } else if (type === COLUMN_OPERATE.MOVE) {
+      log = '移动至专栏';
+      isSucc = await columnDao.moveArticle(id, oid, articleIds);
+    } else if (type === COLUMN_OPERATE.SORT) {
+      log = '排序';
+      isSucc = await columnDao.sortArticle(id, articleIds);
+    } else {
+      log = '移出专栏';
+      isSucc = await columnDao.removeArticle(id, articleIds);
+    }
     if (isSucc) {
-      logger.debug(`文章: ${articleIds.join('、')}, ${type === 1 ? '添加到专栏: ' : '移出专栏: '}${id}.`);
+      logger.debug(`文章: ${articleIds.join('、')}, ${log}:${id}.`);
       return res.success(null, '操作成功');
     }
-    logger.error(`文章: ${articleIds.join('、')}, ${type === 1 ? '添加到专栏: ' : '移出专栏: '}${id}, 失败`);
+    logger.error(`文章: ${articleIds.join('、')}, ${log}:${id}, 失败`);
     return res.fail('操作失败');
   }
 

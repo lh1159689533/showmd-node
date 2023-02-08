@@ -1,6 +1,6 @@
 {
   "pkg": {
-    "targets": [ "node14-macos-x64" ],
+    "targets": [ "node14-linux-x64" ],
     "outputPath": "../dist"
   },
   "main": "../src/main.js"

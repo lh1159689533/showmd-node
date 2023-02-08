@@ -1,5 +1,7 @@
 const dayjs = require('dayjs');
 const sharp = require('sharp');
+const path = require('path');
+const fse = require('fs').promises;
 const logger = require('../logger');
 const Response = require('../utils/Response');
 const githubService = require('./GithubService');
@@ -82,11 +84,12 @@ class ImageService {
       // 合并
       const fileName = `${mergeData.fileName}_${dayjs().format('YYYYMMDDHHmmss')}.webp`;
       const fileContent = await merge(uploadId, mergeData.merge);
+      // const fileContentWatermark = await this.watermark(fileContent);
       // 原始数据先入库，避免压缩图片慢导致阻塞，异步处理后更新到库
       const [id, err] = await new ImageDao().save({ name: fileName, content: fileContent });
       if (!err) {
         // 压缩图片
-        this.compress({ buffer: fileContent, mimetype: mergeData.fileType }).then(data => {
+        this.compress({ buffer: fileContent, mimetype: mergeData.fileType }).then((data) => {
           new ImageDao().save({ id, content: data });
         });
         return res.success({ name: fileName, path: `showmd/file/preview/${id}` });
@@ -99,9 +102,10 @@ class ImageService {
   /**
    * 图片压缩处理并转为webp格式
    * @param {File} file
+   * @param {Boolean} isWatermark 是否添加水印
    * @returns 图片base64格式内容
    */
-  async compress(file) {
+  async compress(file, isWatermark = false) {
     // 只处理图片
     if (!isImageFile(file)) {
       return file;
@@ -112,7 +116,13 @@ class ImageService {
     }
     try {
       // 图片压缩并转为webp格式
-      return await sharp(file.buffer, { animated, limitInputPixels: false }).webp().toBuffer();
+      const fileContent = await sharp(file.buffer, { animated, limitInputPixels: false }).webp().toBuffer();
+
+      if (isWatermark) {
+        // 添加水印
+        return await this.watermark(file.buffer);
+      }
+      return fileContent;
     } catch (e) {
       logger.error('图片压缩报错:', e);
       return null;
@@ -140,6 +150,49 @@ class ImageService {
     } catch (e) {
       logger.error('图片压缩报错:', e);
       return null;
+    }
+  }
+
+  /**
+   * 图片添加水印
+   * @param {Buffer} targetImgBuff 图片文件流
+   */
+  async watermark(targetImgBuff) {
+    // const watermarkFile = await fse.readFile(path.resolve('public/watermark-template.svg'));
+    // const watermarkBuff = await sharp(Buffer.from(watermarkFile.toString().replace('{{authorName}}', '@灰灰')))
+    //   .rotate(180)
+    //   .toBuffer();
+
+    // const sourceBuff = await sharp(targetImgBuff)
+    //   .rotate(180)
+    //   .composite([{ input: watermarkBuff, top: -45, left: -25 }])
+    //   .toBuffer();
+
+    // return await sharp(sourceBuff).rotate(180).toBuffer();
+
+    try {
+      const watermarkFile = await fse.readFile(path.resolve('public/watermark-template1.svg'));
+      const target = sharp(targetImgBuff);
+      let wm = sharp(Buffer.from(watermarkFile.toString().replace('{{authorName}}', '@灰灰')));
+      // const { width: wmWidth, height: wmHeight } = await wm.metadata();
+      const { width, height } = await target.metadata();
+      // if (wmWidth > width || wmHeight > height) {
+      //   const wid = wmWidth > width ? width : wmWidth;
+      //   const hei = wmHeight > height ? height : wmHeight;
+      //   wm = wm.resize({ width: wid, height: hei });
+      // }
+      wm = wm.resize({ width: width * 0.3, height: height * 0.3 });
+      return await target
+        .composite([
+          {
+            input: wm,
+            top: height - 20,
+            left: width - 160,
+          },
+        ])
+        .toBuffer();
+    } catch (e) {
+      logger.error(e);
     }
   }
 }

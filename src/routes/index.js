@@ -7,6 +7,8 @@ const CategoryService = require('../service/CategoryService');
 const UserService = require('../service/UserService');
 const RoleMenuService = require('../service/RoleMenuService');
 
+const holidayConf = require('../config/holiday.config');
+
 const columnRouter = require('./columnRouter');
 const articleRouter = require('./articleRouter');
 const commentRouter = require('./commentRouter');
@@ -14,6 +16,10 @@ const commentRouter = require('./commentRouter');
 router.use('/column', columnRouter);
 router.use('/article', articleRouter);
 router.use('/comment', commentRouter);
+
+router.get('/holiday', (_, res) => {
+  res.send(JSON.stringify({ data: holidayConf }));
+});
 
 /**
  * Markdown上传图片

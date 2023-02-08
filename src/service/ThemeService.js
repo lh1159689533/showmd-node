@@ -1,5 +1,5 @@
-const ContentThemeDao = require('../Dao/ContentThemeDao');
-const CodeThemeDao = require('../Dao/CodeThemeDao');
+const ContentThemeDao = require('../dao/ContentThemeDao');
+const CodeThemeDao = require('../dao/CodeThemeDao');
 const Response = require('../utils/Response');
 
 class ThemeService {

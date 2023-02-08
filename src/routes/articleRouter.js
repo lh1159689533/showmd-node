@@ -52,4 +52,20 @@ router.get('/cover/:id', async (req, res) => {
   res.send(result);
 });
 
+/**
+ * 获取专栏下一篇文章
+ */
+router.post('/next', async (req, res) => {
+  const result = await new ArticleService().findSameColumnArticle(req.body.articleId, 'next');
+  res.send(result);
+});
+
+/**
+ * 获取专栏上一篇文章
+ */
+router.post('/prev', async (req, res) => {
+  const result = await new ArticleService().findSameColumnArticle(req.body.articleId, 'prev');
+  res.send(result);
+});
+
 module.exports = router;

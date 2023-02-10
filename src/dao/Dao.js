@@ -51,7 +51,7 @@ class Dao {
       const modelDatas = await this.model.findAll();
       return [modelDatas?.map((md) => md?.toJSON()), null];
     } catch (e) {
-      return [e, null];
+      return [null, e];
     }
   }
 

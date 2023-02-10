@@ -3,6 +3,7 @@ const sequelize = require('../db/sequelize');
 const Dao = require('./Dao');
 const Article = require('../model/Article');
 const User = require('../model/User');
+const Column = require('../model/Column');
 
 class ArticleDao extends Dao {
   constructor() {
@@ -15,7 +16,7 @@ class ArticleDao extends Dao {
         { model: User, attributes: ['id', 'name'] },
       ],
     });
-    article.update({ readCount: article.readCount + 1 });
+    article?.update({ readCount: article.readCount + 1 });
     return article?.toJSON();
   }
 
@@ -37,11 +38,8 @@ class ArticleDao extends Dao {
       attributes: { exclude: ['content'] },
       where: {
         ...where,
-        columnId: {
-          [Op.or]: {
-            [Op.in]: sequelize.literal(`(select id from column as clm where clm.is_private = 0)`),
-            [Op.is]: null,
-          },
+        id: {
+          [Op.notIn]: sequelize.literal(`(select ca.article_id from column as clm, column_article as ca where ca.column_id = clm.id and clm.is_private = 1)`),
         },
       },
       order: [defaultOrder],
@@ -66,10 +64,13 @@ class ArticleDao extends Dao {
               ))`),
             'commentCount',
           ],
+          [sequelize.literal(`(select \`order\` from column_article as ca where ca.column_id = ${columnId} and ca.article_id = article.id)`), 'order'],
         ],
       },
       where: {
-        columnId,
+        id: {
+          [Op.in]: sequelize.literal(`(select article_id from column_article as ca where ca.column_id = ${columnId})`),
+        },
       },
     });
     return this.toJson(articles);
@@ -82,8 +83,8 @@ class ArticleDao extends Dao {
     const articles = await Article.findAll({
       attributes: { exclude: ['content'] },
       where: {
-        columnId: {
-          [Op.is]: null,
+        id: {
+          [Op.notIn]: sequelize.literal(`(select article_id from column_article)`),
         },
         name: {
           [Op.like]: `%${searchKey}%`,
@@ -153,19 +154,27 @@ class ArticleDao extends Dao {
   }
 
   /**
-   * 批量更新文章
-   * @param {Array} articleIds 文章id集合
-   * @param {Object} updateData 更新的数据
+   * 获取专栏上一篇文章
+   * @param {Number} articleId 文章id
    */
-  async bulkUpdate(articleIds, updateData) {
-    const result = await Article.update(updateData, {
-      where: {
-        [Article.primaryKeyAttribute]: {
-          [Op.in]: articleIds,
+  async findSameColumnArticle(articleId, type) {
+    try {
+      const result = await Article.findOne({
+        attributes: ['id', 'name'],
+        where: {
+          id: {
+            [Op.eq]: sequelize.literal(
+              `(select sca.article_id from column_article as tca, column_article as sca where tca.article_id = ${articleId} and sca.\`order\` ${
+                type === 'next' ? '>' : '<'
+              } tca.\`order\` and sca.column_id = tca.column_id)`
+            ),
+          },
         },
-      },
-    });
-    return result === articleIds.length;
+      });
+      return this.toJson(result);
+    } catch {
+      return null;
+    }
   }
 }
 

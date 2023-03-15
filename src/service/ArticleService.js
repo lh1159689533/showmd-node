@@ -17,10 +17,14 @@ class ArticleService {
   async create(article, cover) {
     const res = new Response();
     const articleDao = new ArticleDao();
-    const [id, err] = await articleDao.save(article);
+    const { columnId, ...art } = article;
+    const [id, err] = await articleDao.save(art);
     if (err) {
       logger.error(`${article?.id ? '更新' : '新建'}文章出错:`, err);
       return res.fail(`${article?.id ? '更新' : '新建'}文章出错`);
+    }
+    if (+columnId) {
+      await articleDao.relateCloumn(id, +columnId);
     }
     if (article?.coverMark === 'changed') {
       this.saveCover(cover, id);

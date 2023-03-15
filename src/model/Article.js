@@ -2,7 +2,6 @@ const { DataTypes, NOW } = require('sequelize');
 const dayjs = require('dayjs');
 const sequelize = require('../db/sequelize');
 const User = require('./User');
-const Column = require('./Column');
 
 // 文章
 const Article = sequelize.define(
@@ -23,6 +22,10 @@ const Article = sequelize.define(
     readCount: {
       type: DataTypes.INTEGER,
       defaultValue: 0
+    },
+    editorType: {
+      type: DataTypes.INTEGER,
+      defaultValue: 1
     },
     userId: {
       // 关联用户

@@ -1,9 +1,9 @@
 const { Op } = require('sequelize');
 const sequelize = require('../db/sequelize');
 const Dao = require('./Dao');
+const ColumnDao = require('./ColumnDao');
 const Article = require('../model/Article');
 const User = require('../model/User');
-const Column = require('../model/Column');
 
 class ArticleDao extends Dao {
   constructor() {
@@ -12,9 +12,7 @@ class ArticleDao extends Dao {
 
   async findById(id) {
     const article = await Article.findByPk(id, {
-      include: [
-        { model: User, attributes: ['id', 'name'] },
-      ],
+      include: [{ model: User, attributes: ['id', 'name'] }],
     });
     article?.update({ readCount: article.readCount + 1 });
     return article?.toJSON();
@@ -175,6 +173,12 @@ class ArticleDao extends Dao {
     } catch {
       return null;
     }
+  }
+
+  async relateCloumn(articleId, columnId) {
+    const columnDao = new ColumnDao();
+    await columnDao.deleteByArticleId(articleId);
+    await columnDao.addArticle(columnId, [articleId]);
   }
 }
 

@@ -132,7 +132,7 @@ class ColumnDao extends Dao {
   /**
    * 专栏移除文章(支持批量移除)
    * @param {Number} columnId 专栏id
-   * @param {Number} articleIds 文章id集合
+   * @param {Number} articleIds 移除文章id集合
    */
   async removeArticle(columnId, articleIds) {
     const articles = await this.findAllByColumId(columnId);
@@ -154,6 +154,14 @@ class ColumnDao extends Dao {
    */
   async deleteByColumId(columnId) {
     await ColumnArticle.destroy({ where: { columnId } });
+  }
+
+  /**
+   * 根据文章id删除与专栏的关联
+   * @param {Number} articleId 文章id
+   */
+  async deleteByArticleId(articleId) {
+    await ColumnArticle.destroy({ where: { articleId } });
   }
 }
 

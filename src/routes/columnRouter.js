@@ -15,7 +15,7 @@ router.post('/update', multer({ preservePath: true }).single('cover'), async (re
 /**
  * 查询用户发布的专栏
  */
-router.get('/findListByUserId', async (req, res) => {
+router.get('/list', async (req, res) => {
   const result = await new ColumnService().findListByUserId(req.query.userId, req.query.searchKey);
   res.send(result);
 });
@@ -23,7 +23,7 @@ router.get('/findListByUserId', async (req, res) => {
 /**
  * 添加/移除/移动文章
  */
-router.post('/articleOperate', async (req, res) => {
+router.post('/operate', async (req, res) => {
   const { id, oid, articleIds, action } = req.body ?? {};
   const result = await new ColumnService().articleOperate(id, oid, articleIds, action);
   res.send(result);

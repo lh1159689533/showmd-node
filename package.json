@@ -4,13 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/main.js --config nodemon.config.json",
+    "start:nodemon": "nodemon src/main.js --config nodemon.config.json",
+    "start": "pm2 start src/main.js --name showmd",
+    "stop": "pm2 stop showmd",
+    "lg": "pm2 logs",
     "build": "node ./build/index.js",
     "eslint": "eslint --ext .js ./src",
     "prepare": "husky install"
   },
   "lint-staged": {
-    
+    "./src/**/*.{js,ts,vue}": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "keywords": [
     "myShowmd",

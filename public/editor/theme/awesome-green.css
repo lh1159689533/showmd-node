@@ -300,8 +300,8 @@
 
 .showmd p {
   line-height: inherit;
-  margin-top: 22px;
-  margin-bottom: 22px !important;
+  /* margin-top: 22px;
+  margin-bottom: 22px !important; */
 }
 
 .showmd ol {

@@ -11,7 +11,7 @@ class Response {
   success(data, message = "success") {
     this.code = SUCC;
     this.message = message;
-    this.data = data;
+    this.data = data || null;
 
     return this.toString();
   }

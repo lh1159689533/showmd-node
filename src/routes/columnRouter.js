@@ -2,28 +2,29 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const ColumnService = require('../service/ColumnService');
+const auth = require('../middleware/auth');
 
 /**
  * 新建/更新专栏
  */
-router.post('/update', multer({ preservePath: true }).single('cover'), async (req, res) => {
+router.post('/update', auth, multer({ preservePath: true }).single('cover'), async (req, res) => {
   const column = JSON.parse(req.body.column);
-  const result = await new ColumnService().create(column, req.file);
+  const result = await new ColumnService().create({ ...column, userId: req.currentUser?.id }, req.file);
   res.send(result);
 });
 
 /**
  * 查询用户发布的专栏
  */
-router.get('/list', async (req, res) => {
-  const result = await new ColumnService().findListByUserId(req.query.userId, req.query.searchKey);
+router.get('/list', auth, async (req, res) => {
+  const result = await new ColumnService().findListByUserId(req.currentUser?.id, req.query.searchKey);
   res.send(result);
 });
 
 /**
  * 添加/移除/移动文章
  */
-router.post('/operate', async (req, res) => {
+router.post('/operate', auth, async (req, res) => {
   const { id, oid, articleIds, action } = req.body ?? {};
   const result = await new ColumnService().articleOperate(id, oid, articleIds, action);
   res.send(result);
@@ -48,7 +49,7 @@ router.get('/listNotInColumn', async (req, res) => {
 /**
  * 置顶/取消置顶专栏
  */
-router.post('/topColumn', async (req, res) => {
+router.post('/topColumn', auth, async (req, res) => {
   const { id, action } = req.body ?? {};
   const result = await new ColumnService().topColumn(id, action);
   res.send(result);
@@ -57,7 +58,7 @@ router.post('/topColumn', async (req, res) => {
 /**
  * 删除专栏
  */
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/delete/:id', auth, async (req, res) => {
   const result = await new ColumnService().deleteById(req.params.id);
   res.send(result);
 });
@@ -89,7 +90,7 @@ router.get('/findByArticleId', async (req, res) => {
 /**
  * 专栏下文章排序
  */
-router.post('/sortArticle', async (req, res) => {
+router.post('/sortArticle', auth, async (req, res) => {
   const result = await new ColumnService().sortArticle(req.body.columnId, req.body.articleIds);
   res.send(result);
 });

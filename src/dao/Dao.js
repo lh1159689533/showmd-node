@@ -46,6 +46,12 @@ class Dao {
     return modelData?.toJSON();
   }
 
+  async findOne(where) {
+    if (!where) return null;
+    const modelData = await this.model.findOne({ where });
+    return modelData?.toJSON();
+  }
+
   async findAll() {
     try {
       const modelDatas = await this.model.findAll();

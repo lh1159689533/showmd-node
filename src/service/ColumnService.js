@@ -1,6 +1,7 @@
 const logger = require('../logger');
 const Response = require('../utils/Response');
 const ColumnDao = require('../dao/ColumnDao');
+const UserDao = require('../dao/UserDao');
 const ArticleDao = require('../dao/ArticleDao');
 const CoverDao = require('../dao/CoverDao');
 const ImageService = require('../service/ImageService');
@@ -66,6 +67,13 @@ class ColumnService {
       if (cover) {
         column.cover = {
           url: `/api/showmd/column/cover/${id}`,
+        };
+      }
+      if (column.userId) {
+        const user = await new UserDao().findById(column.userId);
+        column.user = {
+          ...(user ?? {}),
+          avatar: `/api/showmd/user/avatar/${column.userId}`,
         };
       }
       return res.success({ ...column });

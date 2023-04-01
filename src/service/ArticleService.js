@@ -151,6 +151,21 @@ class ArticleService {
     const article = await articleDao.findSameColumnArticle(articleId, type);
     return res.success(article);
   }
+
+  async delete(articleId) {
+    logger.debug(`删除文章：${articleId}.`);
+    const articleDao = new ArticleDao();
+    const res = new Response();
+    try {
+      const isDel = await articleDao.delete(articleId);
+      if (isDel) {
+        return res.success();
+      }
+      return res.fail('删除失败');
+    } catch (e) {
+      return res.fail(e?.message);
+    }
+  }
 }
 
 module.exports = ArticleService;

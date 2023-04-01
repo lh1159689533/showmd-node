@@ -1,5 +1,5 @@
 module.exports = {
-  show: true,
+  show: false,
   left: {
     img: '/api/holiday/2023/chunjie-l.gif',
   },

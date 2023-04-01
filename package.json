@@ -6,6 +6,8 @@
   "scripts": {
     "start:nodemon": "nodemon src/main.js --config nodemon.config.json",
     "start": "pm2 start src/main.js --name showmd",
+    "restart": "pm2 stop showmd && pm2 start src/main.js --name showmd",
+    "startlog": "pm2 stop showmd && pm2 start src/main.js --name showmd && pm2 logs",
     "stop": "pm2 stop showmd",
     "lg": "pm2 logs",
     "build": "node ./build/index.js",
@@ -47,8 +49,10 @@
   "dependencies": {
     "axios": "^0.27.2",
     "body-parser": "^1.20.0",
+    "cookie": "^0.5.0",
     "dayjs": "^1.11.1",
     "jimp": "^0.16.2",
+    "jsonwebtoken": "^9.0.0",
     "multer": "^1.4.4",
     "object-hash": "^3.0.0",
     "sequelize": "^7.0.0-alpha2.1",

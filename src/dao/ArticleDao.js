@@ -3,6 +3,7 @@ const sequelize = require('../db/sequelize');
 const Dao = require('./Dao');
 const ColumnDao = require('./ColumnDao');
 const Article = require('../model/Article');
+const ColumnArticle = require('../model/ColumnArticle');
 const User = require('../model/User');
 
 class ArticleDao extends Dao {
@@ -175,10 +176,28 @@ class ArticleDao extends Dao {
     }
   }
 
+  /**
+   * 文章关联专栏
+   * @param {Number} articleId 文章id
+   * @param {Number} columnId 专栏id
+   */
   async relateCloumn(articleId, columnId) {
     const columnDao = new ColumnDao();
     await columnDao.deleteByArticleId(articleId);
     await columnDao.addArticle(columnId, [articleId]);
+  }
+
+  /**
+   * 删除文章
+   * @param {Number} articleId 文章id
+   */
+  async delete(articleId) {
+    const relate = await ColumnArticle.findOne({ where: { articleId } });
+    if (relate) {
+      throw new Error(`文章收录于专栏，无法删除`);
+    }
+    const result = await Article.destroy({ where: { id: articleId } });
+    return result !== 0;
   }
 }
 

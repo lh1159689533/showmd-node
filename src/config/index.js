@@ -15,5 +15,7 @@ module.exports = {
   },
   user: {
     avatarPrefix: '/api/showmd/user/avatar', // 用户头像地址前缀
+    secretKey: 'bGFuaXNtZA==', // 登录鉴权Token密钥
+    expires: 24 * 60 * 60, // 登录鉴权Token有效期24h
   }
 };

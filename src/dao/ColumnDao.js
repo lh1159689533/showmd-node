@@ -1,9 +1,9 @@
 const Dao = require('./Dao');
 const sequelize = require('../db/sequelize');
 const { Op } = require('sequelize');
+const logger = require('../logger');
 const Column = require('../model/Column');
 const ColumnArticle = require('../model/ColumnArticle');
-const logger = require('../logger');
 
 class ColumnDao extends Dao {
   constructor() {
@@ -27,8 +27,8 @@ class ColumnDao extends Dao {
     const column = await Column.findOne({
       where: {
         id: {
-          [Op.eq]: sequelize.literal(`(select ca.column_id from column_article as ca where ca.article_id = ${articleId})`)
-        }
+          [Op.eq]: sequelize.literal(`(select ca.column_id from column_article as ca where ca.article_id = ${articleId})`),
+        },
       },
       attributes: {
         include: [[sequelize.literal(`(select count(*) from column_article as ca where ca.column_id = column.id)`), 'articleCnt']],
@@ -84,7 +84,7 @@ class ColumnDao extends Dao {
       const columnArticles = articleIds.map((aid, index) => ({
         columnId,
         articleId: aid,
-        order: index
+        order: index,
       }));
       await this.deleteByColumId(columnId);
       const result = await ColumnArticle.bulkCreate(columnArticles);
@@ -102,7 +102,7 @@ class ColumnDao extends Dao {
   async addArticle(columnId, articleIds) {
     try {
       const articles = await this.findAllByColumId(columnId);
-      const result = await this.saveList(columnId, [...articleIds, ...articles.map(art => art.articleId)]);
+      const result = await this.saveList(columnId, [...articleIds, ...articles.map((art) => art.articleId)]);
       return result;
     } catch {
       return false;
@@ -136,7 +136,10 @@ class ColumnDao extends Dao {
    */
   async removeArticle(columnId, articleIds) {
     const articles = await this.findAllByColumId(columnId);
-    return await this.saveList(columnId, articles.filter(art => !articleIds.includes(art.articleId)).map(art => art.articleId));
+    return await this.saveList(
+      columnId,
+      articles.filter((art) => !articleIds.includes(art.articleId)).map((art) => art.articleId)
+    );
   }
 
   /**

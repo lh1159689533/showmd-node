@@ -10,3 +10,9 @@ exports.COLUMN_OPERATE = {
   MOVE: 2,
   SORT: 3,
 };
+
+// 角色分类: 1 超级管理员, 2 普通
+exports.ROLE_TYPE = {
+  ADMIN: 1,
+  NORMAL: 2
+};

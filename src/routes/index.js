@@ -4,7 +4,6 @@ const multer = require('multer');
 const ImageService = require('../service/ImageService');
 const ThemeService = require('../service/ThemeService');
 const CategoryService = require('../service/CategoryService');
-const UserService = require('../service/UserService');
 const RoleMenuService = require('../service/RoleMenuService');
 
 const holidayConf = require('../config/holiday.config');
@@ -12,10 +11,12 @@ const holidayConf = require('../config/holiday.config');
 const columnRouter = require('./columnRouter');
 const articleRouter = require('./articleRouter');
 const commentRouter = require('./commentRouter');
+const userRouter = require('./userRouter');
 
 router.use('/column', columnRouter);
 router.use('/article', articleRouter);
 router.use('/comment', commentRouter);
+router.use('/user', userRouter);
 
 router.get('/holiday', (_, res) => {
   res.send(JSON.stringify({ data: holidayConf }));
@@ -73,26 +74,10 @@ router.get('/list/category', async (_, res) => {
 });
 
 /**
- * 根据id查询用户
- */
-router.get('/user/:id', async (req, res) => {
-  const result = await new UserService().findUserById(req.params.id);
-  res.send(result);
-});
-
-/**
- * 根据用户id查询用户头像
- */
-router.get('/user/avatar/:id', async (req, res) => {
-  const result = await new UserService().findUserAvatar(req.params.id);
-  res.send(result);
-});
-
-/**
  * 根据角色id查询菜单列表
  */
-router.get('/list/menu/:roleId', async (req, res) => {
-  const result = await new RoleMenuService().listMenuByRoleId(req.params.roleId);
+router.get('/list/menu', async (req, res) => {
+  const result = await new RoleMenuService().listMenu(req.currentUser?.roleId);
   res.send(result);
 });
 

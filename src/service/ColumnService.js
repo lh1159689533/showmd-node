@@ -217,6 +217,10 @@ class ColumnService {
     const columnDao = new ColumnDao();
     const res = new Response();
 
+    const relates = await columnDao.findAllByColumId(id);
+    if (relates?.length) {
+      return res.fail('专栏下有文章, 无法删除');
+    }
     const isSucc = await columnDao.delete(id);
     if (isSucc) {
       new CoverDao().deleteByTargetId(id, COVER_COLUMN);

@@ -12,11 +12,15 @@ const columnRouter = require('./columnRouter');
 const articleRouter = require('./articleRouter');
 const commentRouter = require('./commentRouter');
 const userRouter = require('./userRouter');
+const resourceRouter = require('./resourceRouter');
+
+const currentUser = require('../middleware/currentUser');
 
 router.use('/column', columnRouter);
 router.use('/article', articleRouter);
 router.use('/comment', commentRouter);
 router.use('/user', userRouter);
+router.use('/resource', resourceRouter);
 
 router.get('/holiday', (_, res) => {
   res.send(JSON.stringify({ data: holidayConf }));
@@ -76,8 +80,29 @@ router.get('/list/category', async (_, res) => {
 /**
  * 根据角色id查询菜单列表
  */
-router.get('/list/menu', async (req, res) => {
+router.get('/list/menu', currentUser, async (req, res) => {
   const result = await new RoleMenuService().listMenu(req.currentUser?.roleId);
+  res.send(result);
+});
+
+/**
+ * 图片处理
+ */
+router.post('/image/process', multer({ preservePath: true }).single('file'), async (req, res) => {
+  const result = await new ImageService().process(req.file, req.body);
+  res.send(result);
+});
+
+/**
+ * 图片处理
+ */
+router.post('/image/download', multer({ preservePath: true }).single('file'), async (req, res) => {
+  const result = await new ImageService().process(req.file, req.body, true, res);
+  res.send(result);
+});
+
+router.get('/sse', async (req, res) => {
+  const result = await new ImageService().sse(res);
   res.send(result);
 });
 

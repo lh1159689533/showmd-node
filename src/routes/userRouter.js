@@ -20,14 +20,6 @@ router.post('/register', async (req, res) => {
 });
 
 /**
- * 新建/更新专栏
- */
-router.post('/update', auth, async (req, res) => {
-  const result = await new UserService().create(req.body);
-  res.send(result);
-});
-
-/**
  * 校验用户名唯一性
  */
 router.get('/check', async (req, res) => {
@@ -38,7 +30,7 @@ router.get('/check', async (req, res) => {
 /**
  * 查询登录用户信息
  */
-router.get('/info', async (req, res) => {
+router.get('/info', auth, async (req, res) => {
   const result = await new UserService().findUserInfo(req.currentUser);
   res.send(result);
 });

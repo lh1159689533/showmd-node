@@ -63,10 +63,4 @@ User.hasMany(Article, {
 });
 Article.belongsTo(User);
 
-// 专栏与文章为一对多关系
-// Column.hasMany(Article, {
-//   onDelete: 'SET NULL' // 删除专栏时，关联该专栏的文章外键置为NULL
-// });
-// Article.belongsTo(Column);
-
 module.exports = Article;

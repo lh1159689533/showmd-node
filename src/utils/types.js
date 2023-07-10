@@ -20,5 +20,15 @@ module.exports = {
   isGIFImage(file) {
     const fileType = typeof file === 'string' ? file : file?.mimetype;
     return fileType === 'image/gif';
+  },
+
+  isPNGImage(file) {
+    const fileType = typeof file === 'string' ? file : file?.mimetype;
+    return fileType === 'image/png';
+  },
+
+  isJPGImage(file) {
+    const fileType = typeof file === 'string' ? file : file?.mimetype;
+    return fileType === 'image/jpg';
   }
 };

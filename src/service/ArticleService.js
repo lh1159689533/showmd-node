@@ -69,8 +69,8 @@ class ArticleService {
     if (articles) {
       return res.success(articles.map((item) => ({ ...item, cover: `/api/showmd/article/cover/${item.id}` })));
     } else {
-      logger.error('查询文章列表出错');
-      return res.fail([]);
+      logger.error('查询文章列表失败');
+      return res.fail('查询文章列表失败');
     }
   }
 
@@ -84,8 +84,8 @@ class ArticleService {
     if (articles) {
       return res.success(articles);
     } else {
-      logger.error('查询文章列表出错');
-      return res.fail([]);
+      logger.error('查询热门文章列表失败');
+      return res.fail('查询热门文章列表失败');
     }
   }
 

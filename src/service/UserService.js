@@ -46,10 +46,6 @@ class UserService {
   }
 
   async findUserInfo(currentUser) {
-    const res = new Response();
-    if (!currentUser?.id) {
-      return res.fail('用户未登录');
-    }
     return await this.findUserById(currentUser.id);
   }
 

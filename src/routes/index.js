@@ -12,7 +12,7 @@ const columnRouter = require('./columnRouter');
 const articleRouter = require('./articleRouter');
 const commentRouter = require('./commentRouter');
 const userRouter = require('./userRouter');
-const resourceRouter = require('./resourceRouter');
+// const resourceRouter = require('./resourceRouter');
 
 const currentUser = require('../middleware/currentUser');
 
@@ -20,7 +20,7 @@ router.use('/column', columnRouter);
 router.use('/article', articleRouter);
 router.use('/comment', commentRouter);
 router.use('/user', userRouter);
-router.use('/resource', resourceRouter);
+// router.use('/resource', resourceRouter);
 
 router.get('/holiday', (_, res) => {
   res.send(JSON.stringify({ data: holidayConf }));

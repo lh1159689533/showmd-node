@@ -5,7 +5,7 @@
 
   --table-border-color: #2f8e54;
   /* 偶数tr背景色 */
-  --table-tr-2n-bg-color: rgba(153, 255, 188, .1);
+  --table-tr-2n-bg-color: rgba(153, 255, 188, 0.1);
   /* thead背景色 */
   --table-thead-bg-color: #2f8e54;
   /* thead文本色 */
@@ -17,7 +17,7 @@
   /* 块引用文本色 */
   --blockquote-text-color: #282d36;
   /* 块引用背景色 */
-  --blockquote-bg-color: rgba(66, 185, 131, .1);
+  --blockquote-bg-color: rgba(66, 185, 131, 0.1);
   /* 块引用边框色 */
   --blockquote-border-color: #2f845e;
   /* 块引用.notice代码背景色 */
@@ -75,6 +75,31 @@
   --img-shadow-color: #888888;
 }
 
+.dark .showmd {
+  /* 块引用文本色 */
+  --blockquote-text-color: #d4d4d8;
+  /* 代码背景色 */
+  --spancode-bg-color: #27272a;
+  /* 代码块文本色 */
+  --code-text-color: #d4d4d8;
+}
+
+.dark .showmd.vditor-reset {
+  color: #d4d4d8;
+}
+
+.dark .showmd .code-block {
+  background-color: #18181b;
+}
+
+.dark .showmd :is(.hljs-keyword, .hljs-selector-tag, .hljs-subst) {
+  color: #e4e4e7;
+}
+
+.dark .showmd :is(.hljs-tag, .hljs-name, .hljs-attribute) {
+  color: #0086b3;
+}
+
 .showmd :is(code, pre) {
   font-family: Menlo, Monaco, Consolas, Courier New, monospace !important;
 }
@@ -87,7 +112,7 @@
 }
 
 .showmd :is(h1, h2, h3, h4, h5, h6)::before {
-  content: "" !important;
+  content: '' !important;
 }
 
 .showmd h1 {
@@ -109,13 +134,13 @@
 }
 
 .showmd h2:before {
-  content: " ";
+  content: ' ';
   display: inline-block;
   width: 8px;
 }
 
 .showmd h2:after {
-  content: " ";
+  content: ' ';
   position: absolute;
   display: block;
   width: calc(100% - 48px);
@@ -149,7 +174,7 @@
 
 .showmd .code-block .code-content::-webkit-scrollbar-track-piece {
   /* 滚动条没有滑块的轨道部分 */
-  background: linear-gradient(180deg, rgba(66, 185, 131, .1), transparent);
+  background: linear-gradient(180deg, rgba(66, 185, 131, 0.1), transparent);
 }
 
 .showmd .code-block .code-suofang-checkbox:checked ~ div.code-content {
@@ -163,22 +188,22 @@
   align-items: center;
 }
 
-.showmd .code-block .code-block-menus>i:nth-child(1) {
+.showmd .code-block .code-block-menus > i:nth-child(1) {
   margin-left: 16px;
-  background-color: #F87171;
+  background-color: #f87171;
 }
 
-.showmd .code-block .code-block-menus>i:nth-child(2) {
-  background-color: #FBBF24;
+.showmd .code-block .code-block-menus > i:nth-child(2) {
+  background-color: #fbbf24;
   cursor: pointer;
 }
 
-.showmd .code-block .code-block-menus>i:nth-child(3) {
-  background-color: #34D399;
+.showmd .code-block .code-block-menus > i:nth-child(3) {
+  background-color: #34d399;
   cursor: pointer;
 }
 
-.showmd .code-block .code-block-menus>i {
+.showmd .code-block .code-block-menus > i {
   margin-left: 4px;
   margin-right: 4px;
   width: 10px;
@@ -196,7 +221,7 @@
   /* box-shadow: 1px 1px 10px -1px #ddd; */
 }
 
-.showmd pre>code {
+.showmd pre > code {
   font-size: 0.87em;
   padding: 15px 12px;
   margin: 0;
@@ -204,7 +229,11 @@
   display: block;
   overflow-x: auto;
   color: var(--code-text-color);
-  background: linear-gradient(180deg, rgba(66, 185, 131, .1), transparent) !important;
+  background: linear-gradient(
+    180deg,
+    rgba(66, 185, 131, 0.1),
+    transparent
+  ) !important;
   max-height: fit-content !important;
 }
 
@@ -221,11 +250,11 @@
   color: var(--code-copy-svg-color) !important;
 }
 
-.showmd .vditor-copy>span::after {
+.showmd .vditor-copy > span::after {
   background-color: var(--code-copy-bg-color);
 }
 
-.showmd .vditor-copy>span::before {
+.showmd .vditor-copy > span::before {
   border-left-color: var(--code-copy-border-left-color);
 }
 
@@ -257,7 +286,7 @@
   background-color: var(--blockquote-notice-spancode-bg-color) !important;
 }
 
-.showmd blockquote>p {
+.showmd blockquote > p {
   margin-top: 10px !important;
   margin-bottom: 10px !important;
 }
@@ -268,7 +297,7 @@
   overflow-x: auto;
   background-color: var(--spancode-bg-color) !important;
   color: var(--spancode-text-color);
-  font-size: .87em;
+  font-size: 0.87em;
   padding: 0.065em 0.4em;
 }
 
@@ -291,7 +320,7 @@
 }
 
 .showmd a:before {
-  content: "➤ ";
+  content: '➤ ';
 }
 
 .showmd a:active,
@@ -299,7 +328,7 @@
   color: var(--link-active-text-color);
 }
 
-.showmd input[type=checkbox]:checked:before {
+.showmd input[type='checkbox']:checked:before {
   content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA/klEQVQ4T72TMU7DQBBF318XdFR06egQEnAXRINEGlqgowoIR8AF4AZOZ4JEGq5AC5EixBU4A55BNrEVHAcSBTHlaubt37/zxZKlcn7n6mDPXJvz8IJ89HzWu8t7C8D2dfsY52ae4apHnLx0ktsCsHXZjiUuFgG40x2eJ/H/AhztB+zDUTpLwWj8jGkzxSHiHaMPrDQC8sMoilKzLAUqiKQjmb+ZuAdW80tmelCHODoNgSfP7AFprTTaRTzsJN1GEyuIZ7uW6TEEHwCtyV/6EVBKJHhfzgC0Xv/iXwEFBF4FG0378bd7sPQq5xK/hSnk6sdlX3mZrKkwLZKBeu8n9XuWEUE7X+YAAAAASUVORK5CYII=);
   position: relative;
   top: -2px;

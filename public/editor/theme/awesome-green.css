@@ -2,6 +2,7 @@
 
 .showmd {
   position: relative;
+  font-size: 16px;
 
   --table-border-color: #2f8e54;
   /* 偶数tr背景色 */
@@ -282,7 +283,7 @@
   color: var(--blockquote-notice-strong-text-color) !important;
 }
 
-.showmd blockquote.notice code:not(.hljs):not(.highlight-chroma) {
+.showmd blockquote.notice code[data-backticks] {
   background-color: var(--blockquote-notice-spancode-bg-color) !important;
 }
 
@@ -291,7 +292,7 @@
   margin-bottom: 10px !important;
 }
 
-.showmd code:not(.hljs):not(.highlight-chroma) {
+.showmd code[data-backticks] {
   word-break: break-word;
   border-radius: 2px;
   overflow-x: auto;

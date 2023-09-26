@@ -126,7 +126,7 @@
   display: inline-block;
   font-weight: 700;
   background: var(--h1_6-bg-color);
-  color: var(--h2-text-color);
+  color: var(--h2-text-color) !important;
   padding: 6px 8px 0 0;
   border-top-right-radius: 6px;
   margin-right: 2px;
@@ -171,6 +171,19 @@
   overflow: auto;
   max-height: 800px;
   transition: max-height 300ms;
+}
+
+.showmd .code-block-copy .copy-btn {
+  color: var(--code-border-color);
+}
+
+.code-block-copy .copy-btn::after {
+  background: var(--code-border-color);
+}
+
+.code-block-copy .copy-btn::before {
+  color: var(--code-border-color);
+  border-left-color: var(--code-border-color);
 }
 
 .showmd .code-block .code-content::-webkit-scrollbar-track-piece {

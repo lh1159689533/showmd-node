@@ -67,7 +67,13 @@ class ArticleService {
     const res = new Response();
     const articles = await articleDao.findAll(filters, order);
     if (articles) {
-      return res.success(articles.map((item) => ({ ...item, cover: `/api/showmd/article/cover/${item.id}` })));
+      return res.success(
+        articles.map((item) => ({
+          ...item,
+          cover: `/api/showmd/article/cover/${item.id}`,
+          user: { ...(item.user ?? {}), avatar: `/api/showmd/user/avatar/${item.user?.id}` },
+        }))
+      );
     } else {
       logger.error('查询文章列表失败');
       return res.fail('查询文章列表失败');

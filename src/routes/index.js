@@ -5,6 +5,7 @@ const ImageService = require('../service/ImageService');
 const ThemeService = require('../service/ThemeService');
 const CategoryService = require('../service/CategoryService');
 const RoleMenuService = require('../service/RoleMenuService');
+const FileService = require('../service/FileService');
 
 const holidayConf = require('../config/holiday.config');
 
@@ -103,6 +104,14 @@ router.post('/image/download', multer({ preservePath: true }).single('file'), as
 
 router.get('/sse', async (req, res) => {
   const result = await new ImageService().sse(res);
+  res.send(result);
+});
+
+/**
+ * Markdown上传附件(目前支持html上传到本地md-demo)
+ */
+router.post('/attachfile/upload', multer({ preservePath: true }).single('attachfile'), async (req, res) => {
+  const result = await new FileService().upload(req.file);
   res.send(result);
 });
 

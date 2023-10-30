@@ -1,7 +1,8 @@
 const path = require('path');
 const fs = require('fs');
-const fse = fs.promises;
 const logger = require('../logger');
+
+const fse = fs.promises;
 
 const SLICE_UPLOAD_TEMPDIR = path.resolve('public/temp');
 

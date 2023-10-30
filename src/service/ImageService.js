@@ -9,25 +9,12 @@ const githubService = require('./GithubService');
 const ImageDao = require('../dao/ImageDao');
 const { uploadChunk, merge } = require('../utils/sliceUploadFile');
 const { isImageFile, isGIFImage } = require('../utils/types');
+const { getBasename, getExtname } = require('../utils/file');
 
 const fse = fs.promises;
 
 class ImageService {
   constructor() {}
-
-  getBasename(fileName) {
-    const extname = this.getExtname(fileName);
-    return path.basename(fileName, extname);
-  }
-
-  /**
-   * 获取文件扩展名
-   * @param {String} fileName 文件名
-   * @returns 文件扩展名
-   */
-  getExtname(fileName) {
-    return path.extname(fileName);
-  }
 
   /**
    * 图片上传到github仓库
@@ -36,9 +23,16 @@ class ImageService {
    */
   async uploadToGithub(file) {
     const { originalname: imgName } = file;
-    const [name] = imgName.split('.');
-    const fileName = `${dayjs().format('YYYY-MM-DD')}/${name}_${dayjs().format('YYYYMMDDHHmmss')}.webp`;
-    const fileContent = await this.compress(file);
+    const name = getBasename(imgName);
+    let fileName = `${dayjs().format('YYYY-MM-DD')}/${name}_${dayjs().format('YYYYMMDDHHmmss')}`;
+    let fileContent = null;
+    if (isImageFile(file)) {
+      fileName += '.webp';
+      fileContent = await this.compress(file);
+    } else {
+      fileName += getExtname(imgName);
+      fileContent = file.buffer;
+    }
     const isSucc = await githubService.saveFileContent(fileName, fileContent);
 
     const res = new Response();
@@ -59,9 +53,18 @@ class ImageService {
    */
   async upload(file) {
     const { originalname: imgName } = file;
-    const [name] = imgName.split('.');
-    const fileName = `${name}_${dayjs().format('YYYYMMDDHHmmss')}.webp`;
-    const fileContent = await this.compress(file);
+    const name = getBasename(imgName);
+    let fileName = `${name}_${dayjs().format('YYYYMMDDHHmmss')}`;
+    let fileContent = null;
+
+    if (isImageFile(file)) {
+      fileName += '.webp';
+      fileContent = await this.compress(file);
+    } else {
+      fileName += getExtname(imgName);
+      fileContent = file.buffer;
+    }
+
     const [id, err] = await new ImageDao().save({ name: fileName, content: fileContent });
 
     const res = new Response();
@@ -257,7 +260,7 @@ class ImageService {
 
     const buffer = await sharpFile.toBuffer();
     if (isDownload) {
-      resp.set('content-disposition', `${this.getBasename(file.originalname)}-${dayjs().format('YYYYMMDDHHmmss')}.${options.format}`);
+      resp.set('content-disposition', `${getBasename(file.originalname)}-${dayjs().format('YYYYMMDDHHmmss')}.${options.format}`);
       return buffer;
     }
     return res.success(buffer.toString('base64'));
